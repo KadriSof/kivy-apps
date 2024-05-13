@@ -1,30 +1,57 @@
 <LoginScreen>:
+    MDFloatLayout:
+        md_bg_color: 'white'
+        Image:
+            size_hint: (.6, 1)
+            source: "media/login-screen-background.jpg"
+            fit_mode: 'cover'
+
+        MDLabel:
+            size_hint: (None, None)
+            size: (dp(100), dp(10))
+            pos: ((self.parent.width - self.width), 10)
+            text: "©M.S.KADRI"
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.primary_dark
+
+        Image:
+            size_hint: (.4, .4)
+            pos_hint: {'center_x': .8, 'center_y': .85}
+            source: "media/logo.png"
+            fit_mode: 'cover'
 
     MDFloatLayout:
-        md_bg_color: self.theme_cls.primary_dark
-        size_hint: (0.5, 0.5)
-        pos_hint: {"center_x": .5, "center_y": .5}
+        size_hint: (0.4, 0.5)
+        pos_hint: {'center_x': .8, 'center_y': .5}
 
         MDTextField:
             size_hint: (0.5, 0.2)
             pos_hint: {'center_x': .5, 'center_y': .7}
             hint_text: "Username"
-            text_color_focus: 'white'
             icon_left: 'account'
+            text_color_focus: 'white'
+            line_color_normal: app.theme_cls.primary_dark
+            hint_text_color_normal: app.theme_cls.primary_dark
+            icon_left_color_normal: app.theme_cls.primary_dark
 
         MDTextField:
             id: password_input
             size_hint: (0.5, 0.2)
             pos_hint: {'center_x': .5, 'center_y': .4}
+            password: True
             hint_text: "Password"
             icon_left: 'lock'
-            password: True
             text_color_focus: 'white'
+            line_color_normal: app.theme_cls.primary_dark
+            hint_text_color_normal: app.theme_cls.primary_dark
+            icon_left_color_normal: app.theme_cls.primary_dark
 
         MDIconButton:
             id: password_icon
             pos_hint: {'center_x': .73, 'center_y': .4}
             icon: 'eye'
+            theme_icon_color: 'Custom'
+            icon_color: app.theme_cls.primary_dark
             on_release: root.show_password()
 
         MDRaisedButton:
@@ -32,3 +59,4 @@
             pos_hint: {"center_x": .5, "center_y": .1}
             text: "Log in"
             # style: "elevated"
+            on_release: app.sm.current = "home_screen"

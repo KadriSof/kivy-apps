@@ -1,0 +1,47 @@
+<BorderBox@MDFloatLayout>:
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+
+<HomeScreen>:
+    MDFloatLayout:
+        md_bg_color: 'white'
+
+        MDBoxLayout:
+            size_hint: (.6, .9)
+            pos_hint: {'x': .2, 'y': 0}
+            padding: [dp(10), dp(10)]
+            spacing: dp(10)
+
+            BorderBox:
+                size_hint: (0.5, 1)
+                pos_hint: {'x': 0, 'y': 0}
+
+                MDIcon:
+                    pos: (self.parent.x + dp(8), self.parent.height - dp(24))
+                    font_size: dp(32)
+                    icon: 'account-plus'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    #pos: (self.parent.x + dp(48), self.parent.height - dp(24))
+                    pos: (self.parent.x, self.parent.y)
+                    text: "Client"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+            BorderBox:
+                #md_bg_color: 'green'
+                size_hint: (0.5, 1)
+                pos_hint: {'x': 0.5, 'y': 0}
+
+                MDIcon:
+                    pos: (self.parent.x + dp(8), self.parent.height - dp(24))
+                    font_size: dp(32)
+                    icon: 'devices'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
