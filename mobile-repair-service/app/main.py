@@ -36,6 +36,5 @@ class MainApp(MDApp):
         logging.info('MainApp: Application stopped!')
 
 
-
 if __name__ == '__main__':
     MainApp().run()
