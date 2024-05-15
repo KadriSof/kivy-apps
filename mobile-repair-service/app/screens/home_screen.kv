@@ -46,14 +46,13 @@
                     size_hint: (None, None)
                     #size: (dp(100), dp(100))
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
-                    icon: 'account-search'
+                    icon: 'file-search'
                     icon_size: dp(32)
                     radius: [self.height / 2, ]
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    md_bg_color: (0, 0, 0, 0.2)
                     text: 'First Name:'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
@@ -68,7 +67,6 @@
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
 
                 MDLabel:
-                    md_bg_color: (0, 0, 0, 0.2)
                     text: 'Last Name:'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
@@ -77,7 +75,6 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
 
                 TextInput:
-                    #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
@@ -90,18 +87,10 @@
                     size: (dp(128), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
 
-                MDTextField:
+                TextInput:
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
-                    multiline: False
-                    color: (1, 0, 0, 1)
-                    font_size: '14sp'
-                    #mode: 'rectangle'
-                    line_color_normal: (0, 0, 0, 0.8)
-                    #fill_color_normal: (0, 0, 0, 0.2)
-                    #fill_color_focus: (1, 1, 1, 1)
-                    radius: [4, 4, 4, 4]
 
                 MDLabel:
                     text: 'Phone Number:'
@@ -115,11 +104,15 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
-                    background_color: (0, 0, 0, 0.1)
-                    background_normal: ''
-                    background_active: ''
                     line_anim: False
                     cursor_color: app.theme_cls.primary_dark
+
+                MDRaisedButton:
+                    size_hint: (None, None)
+                    size: (dp(300), dp(100))
+                    pos: ((self.parent.x + self.parent.width - dp(116)), (self.parent.y + dp(16)))
+                    text: 'save'
+                    text_color: 'white'
 
             BorderBox:
                 #md_bg_color: 'green'
@@ -127,7 +120,6 @@
                 pos_hint: {'x': 0.5, 'y': 0}
 
                 MDBoxLayout:
-                    md_bg_color: (0, 0, 0, 0.2)
                     orientation: 'horizontal'
                     pos: (self.parent.x, (self.parent.y + self.parent.height - dp(40)))
                     size_hint: (None, None)
@@ -146,3 +138,105 @@
                         text: "Client"
                         theme_text_color: 'Custom'
                         text_color: app.theme_cls.primary_dark
+
+                MDIconButton:
+                    #md_bg_color: (0, 0, 0, 0.2)
+                    size_hint: (None, None)
+                    #size: (dp(100), dp(100))
+                    pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
+                    icon: 'file-search'
+                    icon_size: dp(32)
+                    radius: [self.height / 2, ]
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    text: 'Device Type:'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
+
+                Spinner:
+                    #md_bg_color: (1, 0, 0, 0.2)
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
+                    values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
+
+                MDLabel:
+                    text: 'Device Brand:'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
+
+                TextInput:
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
+
+
+                MDLabel:
+                    text: 'Device Model'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
+
+                TextInput:
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
+
+                MDLabel:
+                    text: 'Phone Number:'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
+
+                MDTextFieldRect:
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
+                    line_anim: False
+                    cursor_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    text: 'Phone Number:'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
+
+                TextInput:
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
+
+                MDLabel:
+                    text: 'Repair Level:'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(342)))
+
+                Spinner:
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(160), dp(32))
+                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(342))
+                    values: ['High', 'Medium', 'Low']
+
+                MDRaisedButton:
+                    size_hint: (None, None)
+                    size: (dp(300), dp(100))
+                    pos: ((self.parent.x + self.parent.width - dp(116)), (self.parent.y + dp(16)))
+                    text: 'save'
+                    text_color: 'white'
