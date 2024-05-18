@@ -1,3 +1,4 @@
+"""Manages basic CRUD operations and can be extended for specific models."""
 from sqlalchemy.orm import Session
 
 

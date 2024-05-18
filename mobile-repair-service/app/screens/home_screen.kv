@@ -6,9 +6,126 @@
             rectangle: [self.x, self.y, self.width, self.height]
             width: dp(1)
 
+#:import Factory kivy.factory.Factory
+
+#:set color_button (0.784, 0.443, 0.216, 1)  # brown
+#:set color_button_pressed (0.659, 0.522, 0.431, 1)  # darker brown
+#:set color_font   (0.957, 0.890, 0.843, 1)  # off white
+
+<MySpinnerOption@SpinnerOption>:
+    background_color: color_button if self.state == 'down' else color_button_pressed
+    background_down: 'atlas://data/images/defaulttheme/button'
+    color: color_font
+
+<DeviceItem>:
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(80)
+    padding: dp(10)
+    spacing: dp(5)
+
+    MDIconButton:
+        size_hint: (.2, 1)
+        icon: 'information-box'
+        icon_size: dp(32)
+        radius: [self.height / 2, ]
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        on_release: root.info_button_pressed()
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: (.8, 1)
+        spacing: dp(2)
+
+        MDLabel:
+            text: root.device_name
+            theme_text_color: 'Custom'
+            font_style: 'Caption'
+            text_color: app.theme_cls.primary_dark
+
+        MDLabel:
+            text: root.device_brand
+            font_style:
+            theme_text_color: 'Custom'
+            font_style: 'Overline'
+            text_color: app.theme_cls.primary_dark
+
+        MDLabel:
+            text: root.device_status
+            theme_text_color: 'Custom'
+            font_style: 'Overline'
+            text_color: app.theme_cls.primary_dark
+
+    MDIconButton:
+        size_hint: (.2, 1)
+        icon: 'check'
+        icon_size: dp(32)
+        radius: [self.height / 2, ]
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        on_release: root.info_button_pressed()
+###
+
 <HomeScreen>:
     MDFloatLayout:
         md_bg_color: 'white'
+
+        MDBoxLayout:
+            md_bg_color: (1, 1, 0, 0.2)
+            size_hint: (1, .1)
+            pos_hint: {'x': .0, 'y': .9}
+            padding: [dp(10), dp(10)]
+
+            BorderBox:
+
+        MDBoxLayout:
+            size_hint: (.2, .9)
+            pos_hint: {'x': .0, 'y': 0}
+            padding: [dp(10), dp(10)]
+
+            BorderBox:
+                size_hint: (1, 1)
+                pos_hint: {'x': 0, 'y': 0}
+
+                MDIcon:
+                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    font_size: dp(32)
+                    icon: 'timer-sand'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
+                    size_hint: (None, None)
+                    size: (dp(128), dp(32))
+                    text: "Pending"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                ScrollView:
+                    pos: (self.parent.x, self.parent.y)
+                    size_hint: (None, None)
+                    size: (self.parent.width, (self.parent.y + self.parent.height - dp(50)))
+                    padding: [dp(10), dp(10)]
+                    scroll_type: ['bars', 'content']
+                    bar_width: 3
+                    bar_color: app.theme_cls.primary_dark
+
+                    GridLayout:
+                        id: pending_container
+                        cols: 1
+                        padding: dp(10)
+                        spacing: dp(5)
+                        size_hint_y: None
+                        height: self.minimum_height
 
         MDBoxLayout:
             size_hint: (.6, .9)
@@ -20,26 +137,20 @@
                 size_hint: (0.5, 1)
                 pos_hint: {'x': 0, 'y': 0}
 
-                MDBoxLayout:
-                    #md_bg_color: (1, 0, 1, 0.2)
-                    orientation: 'horizontal'
-                    pos: (self.parent.x, (self.parent.y + self.parent.height - dp(40)))
+                MDIcon:
+                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    font_size: dp(32)
+                    icon: 'account-plus'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
                     size_hint: (None, None)
-                    size: (self.parent.width, dp(40))
-                    padding: [dp(2), dp(2)]
-                    spacing: dp(10)
-
-                    MDIcon:
-                        pos_hint: {'center_x': .5, 'center_y': .5}
-                        font_size: dp(32)
-                        icon: 'account-plus'
-                        theme_text_color: 'Custom'
-                        text_color: app.theme_cls.primary_dark
-
-                    MDLabel:
-                        text: "Client"
-                        theme_text_color: 'Custom'
-                        text_color: app.theme_cls.primary_dark
+                    size: (dp(128), dp(32))
+                    text: "Client"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
                     #md_bg_color: (0, 0, 0, 0.2)
@@ -61,6 +172,7 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
 
                 TextInput:
+                    id: client_first_name
                     #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
@@ -75,6 +187,7 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
 
                 TextInput:
+                    id: clinet_last_name
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
@@ -88,12 +201,13 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
 
                 TextInput:
+                    id: client_phone_number
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
 
                 MDLabel:
-                    text: 'Phone Number:'
+                    text: 'email:'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
@@ -101,43 +215,46 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
 
                 MDTextFieldRect:
+                    id: client_email
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
                     line_anim: False
                     cursor_color: app.theme_cls.primary_dark
 
-                MDRaisedButton:
-                    size_hint: (None, None)
-                    size: (dp(300), dp(100))
-                    pos: ((self.parent.x + self.parent.width - dp(116)), (self.parent.y + dp(16)))
-                    text: 'save'
-                    text_color: 'white'
+                MDRectangleFlatIconButton:
+                    md_bg_color: app.theme_cls.primary_dark
+                    size_hint: (0.25, 0.05)
+                    #size: (800, dp(100))
+                    pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
+                    icon: "content-save"
+                    text: "save"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    line_color: "darkgrey"#app.theme_cls.primary_dark
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: root.test_button()
 
             BorderBox:
                 #md_bg_color: 'green'
                 size_hint: (0.5, 1)
                 pos_hint: {'x': 0.5, 'y': 0}
 
-                MDBoxLayout:
-                    orientation: 'horizontal'
-                    pos: (self.parent.x, (self.parent.y + self.parent.height - dp(40)))
+                MDIcon:
+                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    font_size: dp(32)
+                    icon: 'devices'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
                     size_hint: (None, None)
-                    size: (self.parent.width, dp(40))
-                    padding: [dp(2), dp(2)]
-                    spacing: dp(10)
-
-                    MDIcon:
-                        pos_hint: {'center_x': .5, 'center_y': .5}
-                        font_size: dp(32)
-                        icon: 'devices'
-                        theme_text_color: 'Custom'
-                        text_color: app.theme_cls.primary_dark
-
-                    MDLabel:
-                        text: "Client"
-                        theme_text_color: 'Custom'
-                        text_color: app.theme_cls.primary_dark
+                    size: (dp(128), dp(32))
+                    text: "Devices"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
                     #md_bg_color: (0, 0, 0, 0.2)
@@ -163,7 +280,12 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
+                    text: "Device Type"
                     values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
+                    background_normal: 'media/spinner-normal.png'
+                    background_down: 'media/spinner-down.png'
+                    color: "black"
+                    option_cls: Factory.get("MySpinnerOption")
 
                 MDLabel:
                     text: 'Device Brand:'
@@ -194,8 +316,8 @@
 
                 MDLabel:
                     text: 'Phone Number:'
-                    theme_text_color: 'Custom'
-                    text_color: app.theme_cls.primary_dark
+                    #theme_text_color: 'Custom'
+                    #text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
                     size: (dp(128), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
@@ -233,10 +355,46 @@
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(342))
                     values: ['High', 'Medium', 'Low']
+                    background_normal: 'media/spinner-normal.png'
+                    background_down: 'media/spinner-down.png'
 
-                MDRaisedButton:
+                MDRectangleFlatIconButton:
+                    md_bg_color: app.theme_cls.primary_dark
+                    size_hint: (0.25, 0.05)
+                    #size: (800, dp(100))
+                    pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
+                    icon: "content-save"
+                    text: "save"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    line_color: "darkgrey"#app.theme_cls.primary_dark
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+
+
+        MDBoxLayout:
+            md_bg_color: (1, 1, 0, 0.2)
+            size_hint: (.2, .9)
+            pos_hint: {'x': .8, 'y': 0}
+            padding: [dp(10), dp(10)]
+
+            BorderBox:
+                size_hint: (1, 1)
+                pos_hint: {'x': 0, 'y': 0}
+
+                MDIcon:
+                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    font_size: dp(32)
+                    icon: 'timer-sand-complete'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
                     size_hint: (None, None)
-                    size: (dp(300), dp(100))
-                    pos: ((self.parent.x + self.parent.width - dp(116)), (self.parent.y + dp(16)))
-                    text: 'save'
-                    text_color: 'white'
+                    size: (dp(128), dp(32))
+                    text: "Complete"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                ScrollView:

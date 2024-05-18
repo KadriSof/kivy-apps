@@ -7,6 +7,8 @@ from kivymd.app import MDApp
 from screens.login_screen import LoginScreen
 from screens.home_screen import HomeScreen
 
+from utils.database_utils import check_database_connection
+
 
 class MainApp(MDApp):
     def __init__(self, **kwargs):
@@ -31,6 +33,7 @@ class MainApp(MDApp):
 
     def on_start(self) -> None:
         logging.info('MainApp: Application started!')
+        check_database_connection()
 
     def on_stop(self) -> None:
         logging.info('MainApp: Application stopped!')
