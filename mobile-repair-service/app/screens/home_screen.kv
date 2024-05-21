@@ -17,7 +17,7 @@
     background_down: 'atlas://data/images/defaulttheme/button'
     color: color_font
 
-<DeviceItem>:
+<DeviceItemViewModel>:
     canvas:
         Color:
             rgba: (0, 0, 0, .2)
@@ -38,7 +38,7 @@
         radius: [self.height / 2, ]
         theme_text_color: 'Custom'
         text_color: app.theme_cls.primary_dark
-        on_release: root.info_button_pressed()
+        on_release: root.get_device_info()
 
     MDBoxLayout:
         orientation: 'vertical'
@@ -65,26 +65,63 @@
             text_color: app.theme_cls.primary_dark
 
     MDIconButton:
+        id: check_button
         size_hint: (.2, 1)
         icon: 'check'
         icon_size: dp(32)
         radius: [self.height / 2, ]
         theme_text_color: 'Custom'
         text_color: app.theme_cls.primary_dark
-        on_release: root.info_button_pressed()
+        on_release: app.root.get_screen('home_screen').transfer_device(root)
 ###
 
 <HomeScreen>:
+    id: home_screen
+
     MDFloatLayout:
         md_bg_color: 'white'
 
         MDBoxLayout:
-            md_bg_color: (1, 1, 0, 0.2)
+            #md_bg_color: (1, 1, 0, 0.2)
             size_hint: (1, .1)
             pos_hint: {'x': .0, 'y': .9}
             padding: [dp(10), dp(10)]
 
-            BorderBox:
+            canvas:
+                Color:
+                    rgba: (0, 0, 0, .2)
+                Line:
+                    rectangle: [self.x, self.y, self.width, self.height]
+                    width: dp(1)
+
+            Button:
+                size_hint: (0.125, 1)
+                text: "Manage Clients"
+
+            Button:
+                size_hint: (0.125, 1)
+                text: "Manage Clients"
+
+            Button:
+                size_hint: (0.125, 1)
+                text: "Manage Clients"
+
+            Button:
+                size_hint: (0.125, 1)
+                text: "Manage Clients"
+
+            MDBoxLayout:
+                #size_hint: (0.4, 1)
+
+            MDFloatingActionButton:
+                #size_hint: (0.1, 1)
+                md_bg_color: "white"
+                type: "standard"
+                icon: "logout-variant"
+                icon_size: dp(32)
+                radius: [self.height / 2, ]
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_dark
 
         MDBoxLayout:
             size_hint: (.2, .9)
@@ -276,12 +313,13 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
 
                 Spinner:
+                    id: device_type
                     #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
-                    text: "Device Type"
-                    values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
+                    text: "Choose Type"
+                    values: ['Phone', 'PC', 'Tablet']
                     background_normal: 'media/spinner-normal.png'
                     background_down: 'media/spinner-down.png'
                     color: "black"
@@ -295,10 +333,18 @@
                     size: (dp(128), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
 
-                TextInput:
+                Spinner:
+                    id: device_brand
+                    #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
+                    text: "Choose brand"
+                    values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
+                    background_normal: 'media/spinner-normal.png'
+                    background_down: 'media/spinner-down.png'
+                    color: "black"
+                    option_cls: Factory.get("MySpinnerOption")
 
 
                 MDLabel:
@@ -310,6 +356,7 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
 
                 TextInput:
+                    id: device_model
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
@@ -351,10 +398,11 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(342)))
 
                 Spinner:
+                    id: device_status
                     size_hint: (None, None)
                     size: (self.parent.width - dp(160), dp(32))
                     pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(342))
-                    values: ['High', 'Medium', 'Low']
+                    values: ['Defective', 'Repaired']
                     background_normal: 'media/spinner-normal.png'
                     background_down: 'media/spinner-down.png'
 
@@ -370,7 +418,7 @@
                     line_color: "darkgrey"#app.theme_cls.primary_dark
                     theme_icon_color: "Custom"
                     icon_color: "white"
-
+                    on_release: root.register_device()
 
         MDBoxLayout:
             md_bg_color: (1, 1, 0, 0.2)
@@ -398,3 +446,18 @@
                     text_color: app.theme_cls.primary_dark
 
                 ScrollView:
+                    pos: (self.parent.x, self.parent.y)
+                    size_hint: (None, None)
+                    size: (self.parent.width, (self.parent.y + self.parent.height - dp(50)))
+                    padding: [dp(10), dp(10)]
+                    scroll_type: ['bars', 'content']
+                    bar_width: 3
+                    bar_color: app.theme_cls.primary_dark
+
+                    GridLayout:
+                        id: complete_container
+                        cols: 1
+                        padding: dp(10)
+                        spacing: dp(5)
+                        size_hint_y: None
+                        height: self.minimum_height

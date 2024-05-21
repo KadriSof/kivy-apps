@@ -20,7 +20,6 @@ class MainApp(MDApp):
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.primary_palette = 'Indigo'
 
-
         # Load screen definitions from .kv files
         Builder.load_file("screens/login_screen.kv")
         Builder.load_file("screens/home_screen.kv")
