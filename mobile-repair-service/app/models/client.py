@@ -12,3 +12,6 @@ class Client(Base):
     phone_number = Column(String(20), unique=True)
 
     devices = relationship('Device', back_populates='client')
+
+    def __repr__(self):
+        return f"<Client(id={self.id}, name={self.name}, phone_number={self.phone_number})>"

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -25,36 +27,45 @@ class HomeScreen(Screen):
 
         else:
             self.ids.complete_container.remove_widget(device_item_view_model)
-            # TODO: Add the logic for registering the device as fixed in the database.
+            # TODO: Add the a call for the "register_device()" method.
 
     def register_device(self):
         device_type = self.ids.device_type.text
         device_brand = self.ids.device_brand.text
         device_model = self.ids.device_model.text
-        device_status = self.ids.device_status.text
-        print(device_type, device_brand, device_model, device_status)
+        fault_type = self.ids.fault_type.text
+        fault_level = self.ids.fault_level.text
+        print(f"Device Type: {device_type}\n"
+              f"Device Brand: {device_brand}\n"
+              f"Device Model: {device_model}\n"
+              f"Fault Type: {fault_type}\n"
+              f"Fault Level: {fault_level}\n")
 
-        session = get_session()
-        try:
-            # Pass the session to the repository
-            device_repository = DeviceRepository(session)
-            device_service = DeviceService(device_repository)
-            device = device_service.create_device(device_type, device_brand, device_model, device_status)
-            device_service.register_device(device)
+        # TODO: Figure out how to change the session handling to the service layer.
+        # session = get_session()
+        # try:
+        #     # Pass the session to the repository
+        #     device_repository = DeviceRepository(session)
+        #     device_service = DeviceService(device_repository)
+        #     device = device_service.create_device(device_type, device_brand, device_model, device_status)
+        #     device_service.register_device(device)
+        #
+        #     # Commit the session if everything is successful
+        #     session.commit()
+        # except Exception as e:
+        #     # Rollback the session in case of any errors
+        #     session.rollback()
+        #     print(f"Error occurred: {e}")
+        # finally:
+        #     # Close the session
+        #     session.close()
 
-            # Commit the session if everything is successful
-            session.commit()
-        except Exception as e:
-            # Rollback the session in case of any errors
-            session.rollback()
-            print(f"Error occurred: {e}")
-        finally:
-            # Close the session
-            session.close()
-
-    def test_button(self):
-        for widget_id in self.ids:
-            print(widget_id, ':', self.ids[widget_id].text)
+    # TODO: Adjust the information entry configuration logic.
+    def configure_device_information_entry(self, value):
+        if value == "Hardware":
+            self.ids.fault_code.values = ["HF01", "HF02", "HF03", "HF04", "HF05"]
+        else:
+            self.ids.fault_code.values = ["FF01", "FF02", "FF03", "FF04", "FF05"]
 
 
 class DeviceItemViewModel(MDBoxLayout):

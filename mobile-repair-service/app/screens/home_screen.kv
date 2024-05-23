@@ -1,4 +1,59 @@
+#:import Factory kivy.factory.Factory
+
+
 <BorderBox@MDFloatLayout>:
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(2)
+
+
+<BorderTextInput@TextInput>:
+    background_normal: ''
+    background_active: ''
+    cursor_color: "grey"
+    foreground_color: (0, 0, 0, 1)
+
+    canvas.before:
+        Color:
+            rgba: (0, 0, 0, .4) if self.focus == True else (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+        Color:
+            rgba: (0, 0, 0, 1)
+
+<MySpinner@Spinner>:
+    background_normal: 'media/spinner-normal.png'
+    background_down: 'media/spinner-down.png'
+    values: ['Phone', 'PC', 'Tablet']
+    text_size: (self.width, None)
+    bold: True
+    halign: 'center'
+    valign: 'center'
+    shorten: True
+    color: "dimgray"
+    option_cls: Factory.get("MySpinnerOption")
+
+    canvas.before:
+        Color:
+            rgba: (0, 0, 0, .4) if self.state == 'down' else (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+        Color:
+            rgba: (0, 0, 0, 1)
+
+<MySpinnerOption@SpinnerOption>:
+    background_color: "lightsteelblue" if self.state == 'down' else "lavender"
+    background_normal: ''
+    background_down: ''
+    color: "darkslategray"
+    size_hint_y: None
+    height: dp(32)
+
     canvas:
         Color:
             rgba: (0, 0, 0, .2)
@@ -6,16 +61,6 @@
             rectangle: [self.x, self.y, self.width, self.height]
             width: dp(1)
 
-#:import Factory kivy.factory.Factory
-
-#:set color_button (0.784, 0.443, 0.216, 1)  # brown
-#:set color_button_pressed (0.659, 0.522, 0.431, 1)  # darker brown
-#:set color_font   (0.957, 0.890, 0.843, 1)  # off white
-
-<MySpinnerOption@SpinnerOption>:
-    background_color: color_button if self.state == 'down' else color_button_pressed
-    background_down: 'atlas://data/images/defaulttheme/button'
-    color: color_font
 
 <DeviceItemViewModel>:
     canvas:
@@ -82,38 +127,116 @@
         md_bg_color: 'white'
 
         MDBoxLayout:
-            #md_bg_color: (1, 1, 0, 0.2)
             size_hint: (1, .1)
             pos_hint: {'x': .0, 'y': .9}
-            padding: [dp(10), dp(10)]
+            padding: [dp(5), dp(0)]
+            spacing: dp(5)
 
             canvas:
                 Color:
-                    rgba: (0, 0, 0, .2)
+                    rgba: (0, 0, 0, .1)
                 Line:
                     rectangle: [self.x, self.y, self.width, self.height]
-                    width: dp(1)
+                    width: dp(5)
+                Color:
+                    rgba: (48/255, 63/255, 159/255, 1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
-            Button:
-                size_hint: (0.125, 1)
-                text: "Manage Clients"
+            Image:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(48), self.parent.height)
+                source: "media/logo-bgwhite.png"
+                fit_mode: "scale-down"
 
-            Button:
-                size_hint: (0.125, 1)
-                text: "Manage Clients"
+            MDLabel:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(72), dp(48))
+                text: "Manage:"
+                bold: True
+                font_style: "JetBrainsMono"
+                theme_text_color: 'Custom'
+                text_color: "white"
 
-            Button:
-                size_hint: (0.125, 1)
-                text: "Manage Clients"
+            MDRaisedButton:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(80), dp(48))
+                md_bg_color: "white"
+                text: "Users"
+                font_name: "JetBrainsMono"
+                font_style: "Button"
+                text_color: app.theme_cls.primary_dark
+                line_color: "grey"
+                color: "black"
+                shorten: True
 
-            Button:
-                size_hint: (0.125, 1)
-                text: "Manage Clients"
+            MDRaisedButton:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(128), dp(80))
+                md_bg_color: "white"
+                text: "Customers"
+                font_name: "JetBrainsMono"
+                font_style: "Button"
+                text_color: app.theme_cls.primary_dark
+                line_color: "grey"
+                color: "black"
+                shorten: True
+
+            MDRaisedButton:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(128), dp(48))
+                md_bg_color: "white"
+                text: "Devices"
+                font_name: "JetBrainsMono"
+                font_style: "Button"
+                text_color: app.theme_cls.primary_dark
+                line_color: "grey"
+                color: "black"
+                shorten: True
+
+            MDRaisedButton:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(128), dp(48))
+                md_bg_color: "white"
+                text: "Reports"
+                font_name: "JetBrainsMono"
+                font_style: "Button"
+                text_color: app.theme_cls.primary_dark
+                line_color: "grey"
+                color: "black"
+                shorten: True
 
             MDBoxLayout:
-                #size_hint: (0.4, 1)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                canvas:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+
+                    RoundedRectangle:
+                        pos: (self.x, self.y + dp(10))
+                        size: (self.width, self.parent.height - dp(20))
+                        radius: [4, 4, 4, 4]
+
+            MDLabel:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (None, None)
+                size: (dp(72), dp(48))
+                text: "Logout:"
+                bold: True
+                font_style: "JetBrainsMono"
+                theme_text_color: 'Custom'
+                text_color: "white"
 
             MDFloatingActionButton:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 #size_hint: (0.1, 1)
                 md_bg_color: "white"
                 type: "standard"
@@ -133,17 +256,19 @@
                 pos_hint: {'x': 0, 'y': 0}
 
                 MDIcon:
-                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    pos: (self.parent.x + dp(4), self.parent.y + self.parent.height - dp(36))
                     font_size: dp(32)
                     icon: 'timer-sand'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height - dp(4))
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     text: "Pending"
+                    bold: True
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
@@ -175,25 +300,25 @@
                 pos_hint: {'x': 0, 'y': 0}
 
                 MDIcon:
-                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    pos: (self.parent.x + dp(4), self.parent.y + self.parent.height - dp(36))
                     font_size: dp(32)
                     icon: 'account-plus'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height - dp(4))
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     text: "Client"
+                    bold: True
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
-                    #md_bg_color: (0, 0, 0, 0.2)
-                    size_hint: (None, None)
-                    #size: (dp(100), dp(100))
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
+                    size_hint: (None, None)
                     icon: 'file-search'
                     icon_size: dp(32)
                     radius: [self.height / 2, ]
@@ -201,74 +326,77 @@
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    text: 'First Name:'
-                    theme_text_color: 'Custom'
-                    text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(128), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
+                    text: 'First Name:'
+                    font_style: "JetBrainsMono"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
 
-                TextInput:
+                BorderTextInput:
                     id: client_first_name
-                    #md_bg_color: (1, 0, 0, 0.2)
+                    pos: ((self.parent.x + dp(160)), (self.parent.y + self.parent.height - dp(150)))
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
+                    size: (self.parent.width - dp(176), dp(32))
 
                 MDLabel:
-                    text: 'Last Name:'
-                    theme_text_color: 'Custom'
-                    text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(128), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
-
-                TextInput:
-                    id: clinet_last_name
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
-
-                MDLabel:
-                    text: 'Phone Number:'
+                    size: (dp(144), dp(32))
+                    text: 'Last Name:'
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(128), dp(32))
-                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
 
-                TextInput:
+                BorderTextInput:
+                    id: client_last_name
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(176), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(198))
+
+                MDLabel:
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
+                    text: 'Phone Number:'
+                    font_style: "JetBrainsMono"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                BorderTextInput:
                     id: client_phone_number
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
+                    size: (self.parent.width - dp(176), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(246))
 
                 MDLabel:
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
                     text: 'email:'
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(128), dp(32))
-                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
 
-                MDTextFieldRect:
+                BorderTextInput:
                     id: client_email
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
+                    size: (self.parent.width - dp(176), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(294))
                     line_anim: False
                     cursor_color: app.theme_cls.primary_dark
 
                 MDRectangleFlatIconButton:
-                    md_bg_color: app.theme_cls.primary_dark
-                    size_hint: (0.25, 0.05)
-                    #size: (800, dp(100))
                     pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
+                    size_hint: (0.25, 0.05)
+                    md_bg_color: app.theme_cls.primary_dark
                     icon: "content-save"
                     text: "save"
+                    font_style: "Button"
                     theme_text_color: "Custom"
                     text_color: "white"
-                    line_color: "darkgrey"#app.theme_cls.primary_dark
+                    line_color: "darkgrey"
                     theme_icon_color: "Custom"
                     icon_color: "white"
                     on_release: root.test_button()
@@ -279,17 +407,18 @@
                 pos_hint: {'x': 0.5, 'y': 0}
 
                 MDIcon:
-                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    pos: (self.parent.x + dp(4), self.parent.y + self.parent.height - dp(36))
                     font_size: dp(32)
                     icon: 'devices'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height - dp(4))
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     text: "Devices"
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
@@ -306,122 +435,117 @@
 
                 MDLabel:
                     text: 'Device Type:'
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
 
-                Spinner:
+                MySpinner:
                     id: device_type
-                    #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(150))
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(150))
+                    values: ['Mobile', 'PC', 'Tablet']
                     text: "Choose Type"
-                    values: ['Phone', 'PC', 'Tablet']
-                    background_normal: 'media/spinner-normal.png'
-                    background_down: 'media/spinner-down.png'
-                    color: "black"
-                    option_cls: Factory.get("MySpinnerOption")
 
                 MDLabel:
                     text: 'Device Brand:'
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
 
-                Spinner:
+                MySpinner:
                     id: device_brand
-                    #md_bg_color: (1, 0, 0, 0.2)
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(198))
-                    text: "Choose brand"
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(198))
                     values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
-                    background_normal: 'media/spinner-normal.png'
-                    background_down: 'media/spinner-down.png'
-                    color: "black"
-                    option_cls: Factory.get("MySpinnerOption")
-
+                    text: "Choose brand"
 
                 MDLabel:
-                    text: 'Device Model'
+                    text: 'Device Model:'
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
 
-                TextInput:
+                BorderTextInput:
                     id: device_model
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(246))
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(246))
 
                 MDLabel:
-                    text: 'Phone Number:'
-                    #theme_text_color: 'Custom'
-                    #text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(128), dp(32))
-                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
-
-                MDTextFieldRect:
-                    size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
-                    line_anim: False
-                    cursor_color: app.theme_cls.primary_dark
-
-                MDLabel:
-                    text: 'Phone Number:'
+                    text: "Fault Type:"
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
 
-                TextInput:
+                MySpinner:
+                    id: fault_type
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(294))
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(294))
+                    values: ['Hardware', 'Firmware']
+                    on_text: root.configure_device_information_entry(self.text)
 
                 MDLabel:
-                    text: 'Repair Level:'
+                    text: "Fault Code:"
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
                     size_hint: (None, None)
-                    size: (dp(128), dp(32))
+                    size: (dp(144), dp(32))
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(342)))
 
-                Spinner:
-                    id: device_status
+                MySpinner:
+                    id: fault_code
                     size_hint: (None, None)
-                    size: (self.parent.width - dp(160), dp(32))
-                    pos: (self.parent.x + dp(144), self.parent.y + self.parent.height - dp(342))
-                    values: ['Defective', 'Repaired']
-                    background_normal: 'media/spinner-normal.png'
-                    background_down: 'media/spinner-down.png'
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(342))
+                    values: ['HF01: Microphone Problem', 'HF02: Speaker Problem']
+
+                MDLabel:
+                    text: 'Fault Level:'
+                    font_style: "JetBrainsMono"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(390)))
+
+                MySpinner:
+                    id: fault_level
+                    size_hint: (None, None)
+                    size: (self.parent.width - dp(167), dp(32))
+                    pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(390))
+                    values: ['Critical', 'Major', 'Minor']
 
                 MDRectangleFlatIconButton:
-                    md_bg_color: app.theme_cls.primary_dark
-                    size_hint: (0.25, 0.05)
-                    #size: (800, dp(100))
                     pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
+                    size_hint: (0.25, 0.05)
+                    md_bg_color: app.theme_cls.primary_dark
                     icon: "content-save"
                     text: "save"
                     theme_text_color: "Custom"
                     text_color: "white"
-                    line_color: "darkgrey"#app.theme_cls.primary_dark
+                    line_color: "darkgrey"
                     theme_icon_color: "Custom"
                     icon_color: "white"
                     on_release: root.register_device()
 
+
         MDBoxLayout:
-            md_bg_color: (1, 1, 0, 0.2)
             size_hint: (.2, .9)
             pos_hint: {'x': .8, 'y': 0}
             padding: [dp(10), dp(10)]
@@ -431,17 +555,18 @@
                 pos_hint: {'x': 0, 'y': 0}
 
                 MDIcon:
-                    pos: (self.parent.x + dp(2), self.parent.y + self.parent.height - dp(34))
+                    pos: (self.parent.x + dp(4), self.parent.y + self.parent.height - dp(36))
                     font_size: dp(32)
                     icon: 'timer-sand-complete'
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height)
+                    pos: (self.parent.x + dp(40), self.parent.y + self.parent.height - self.height - dp(4))
                     size_hint: (None, None)
                     size: (dp(128), dp(32))
                     text: "Complete"
+                    font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
