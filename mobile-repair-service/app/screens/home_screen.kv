@@ -316,6 +316,15 @@
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
+                MDLabel:
+                    pos: ((self.parent.x + self.parent.width - dp(188)), (self.parent.y + self.parent.height - dp(94)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
+                    text: "Search Client"
+                    font_style: "JetBrainsMono"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
                 MDIconButton:
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
                     size_hint: (None, None)
@@ -339,6 +348,8 @@
                     pos: ((self.parent.x + dp(160)), (self.parent.y + self.parent.height - dp(150)))
                     size_hint: (None, None)
                     size: (self.parent.width - dp(176), dp(32))
+                    multiline: False
+                    on_text_validate: root.validate_name(self)
 
                 MDLabel:
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(198)))
@@ -354,6 +365,8 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(176), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(198))
+                    multiline: False
+                    on_text_validate: root.validate_name(self)
 
                 MDLabel:
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(246)))
@@ -369,6 +382,9 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(176), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(246))
+                    input_filter: 'int'
+                    multiline: False
+                    on_text_validate: root.validate_phone_number(self)
 
                 MDLabel:
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
@@ -385,7 +401,20 @@
                     size: (self.parent.width - dp(176), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(294))
                     line_anim: False
+                    multiline: False
                     cursor_color: app.theme_cls.primary_dark
+                    on_text_validate: root.verify_email(self)
+                    on_focus: root.validate_email(self)
+
+                MDLabel:
+                    id: input_validation
+                    pos: (self.parent.x, self.parent.y + dp(56))
+                    size_hint: (1, .1)
+                    padding: dp(16)
+                    text: ""
+                    markup: True
+                    color: app.theme_cls.primary_dark
+                    font_style: 'Subtitle2'
 
                 MDRectangleFlatIconButton:
                     pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
@@ -418,12 +447,21 @@
                     size_hint: (None, None)
                     size: (dp(144), dp(32))
                     text: "Devices"
+                    bold: True
+                    font_style: "JetBrainsMono"
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+
+                MDLabel:
+                    pos: ((self.parent.x + self.parent.width - dp(188)), (self.parent.y + self.parent.height - dp(94)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
+                    text: "Search Device"
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
-                    #md_bg_color: (0, 0, 0, 0.2)
                     size_hint: (None, None)
                     #size: (dp(100), dp(100))
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
@@ -448,7 +486,7 @@
                     size: (self.parent.width - dp(167), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(150))
                     values: ['Mobile', 'PC', 'Tablet']
-                    text: "Choose Type"
+                    on_text: root.set_device_brand(self.text)
 
                 MDLabel:
                     text: 'Device Brand:'
@@ -465,7 +503,6 @@
                     size: (self.parent.width - dp(167), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(198))
                     values: ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia']
-                    text: "Choose brand"
 
                 MDLabel:
                     text: 'Device Model:'
@@ -497,7 +534,7 @@
                     size: (self.parent.width - dp(167), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(294))
                     values: ['Hardware', 'Firmware']
-                    on_text: root.configure_device_information_entry(self.text)
+                    on_text: root.set_fault_type(self.text)
 
                 MDLabel:
                     text: "Fault Code:"
@@ -537,6 +574,7 @@
                     md_bg_color: app.theme_cls.primary_dark
                     icon: "content-save"
                     text: "save"
+                    font_style: "Button"
                     theme_text_color: "Custom"
                     text_color: "white"
                     line_color: "darkgrey"
@@ -566,6 +604,7 @@
                     size_hint: (None, None)
                     size: (dp(128), dp(32))
                     text: "Complete"
+                    bold: True
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark

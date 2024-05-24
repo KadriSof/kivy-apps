@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
@@ -61,11 +62,54 @@ class HomeScreen(Screen):
         #     session.close()
 
     # TODO: Adjust the information entry configuration logic.
-    def configure_device_information_entry(self, value):
+    def set_fault_type(self, value):
         if value == "Hardware":
             self.ids.fault_code.values = ["HF01", "HF02", "HF03", "HF04", "HF05"]
         else:
             self.ids.fault_code.values = ["FF01", "FF02", "FF03", "FF04", "FF05"]
+
+    def set_device_brand(self, value):
+        if value == "Mobile":
+            self.ids.device_brand.values = \
+                ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia', 'Other']
+        elif value == "PC":
+            self.ids.device_brand.values = \
+                ['Asus', 'Apple', 'MSI', 'HP', 'Dell', 'Lenovo', 'Toshiba', 'Samsung', 'Other']
+        else:
+            self.ids.device_brand.values = \
+                ['Apple', 'Google', 'OnePlus', 'Oppo', 'Samsung', 'Vivo', 'Xiaomi', 'Other']
+
+    def validate_name(self, widget):
+        if widget.text == "":
+            print("client name must not be empty")
+            self.ids.input_validation.text = \
+                "[color=#ff0000]*[/color] [i]Client name must not be empty.[/i]"
+
+    def validate_email(self, widget):
+        if not widget.focus:
+            print("textinput unfocus!")
+            self.verify_email(widget)
+            self.ids.input_validation.text = \
+                "[color=#ff0000]*[/color] [i]Client email must not be empty.[/i]"
+
+    def validate_phone_number(self, widget):
+        if widget.text == "":
+            self.ids.input_validation.text = \
+                "[color=#ff0000]*[/color] [i]Client phone number must not be empty.[/i]"
+
+        if len(widget.text) != 8:
+            return print("invalid phone number!")
+
+    @staticmethod
+    def verify_email(widget):
+        pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+
+        if re.match(pattern, widget.text):
+            print("correct email!")
+            return widget.text
+        else:
+            print("incorrect email!")
+            return ""
 
 
 class DeviceItemViewModel(MDBoxLayout):
