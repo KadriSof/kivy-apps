@@ -1,7 +1,14 @@
 #:import Factory kivy.factory.Factory
 
+<BorderBoxLayout@MDBoxLayout>:
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(2)
 
-<BorderBox@MDFloatLayout>:
+<BorderFloatLayout@MDFloatLayout>:
     canvas:
         Color:
             rgba: (0, 0, 0, .2)
@@ -18,7 +25,7 @@
 
     canvas.before:
         Color:
-            rgba: (0, 0, 0, .4) if self.focus == True else (0, 0, 0, .2)
+            rgba: (0, 0, 0, .5) if self.focus == True else (0, 0, 0, .3)
         Line:
             rectangle: [self.x, self.y, self.width, self.height]
             width: dp(1)
@@ -39,7 +46,7 @@
 
     canvas.before:
         Color:
-            rgba: (0, 0, 0, .4) if self.state == 'down' else (0, 0, 0, .2)
+            rgba: (0, 0, 0, .6) if self.state == 'down' else (0, 0, 0, .4)
         Line:
             rectangle: [self.x, self.y, self.width, self.height]
             width: dp(1)
@@ -61,63 +68,6 @@
             rectangle: [self.x, self.y, self.width, self.height]
             width: dp(1)
 
-
-<DeviceItemViewModel>:
-    canvas:
-        Color:
-            rgba: (0, 0, 0, .2)
-        Line:
-            rectangle: [self.x, self.y, self.width, self.height]
-            width: dp(1)
-
-    orientation: 'horizontal'
-    size_hint_y: None
-    height: dp(80)
-    padding: dp(10)
-    spacing: dp(5)
-
-    MDIconButton:
-        size_hint: (.2, 1)
-        icon: 'information-box'
-        icon_size: dp(32)
-        radius: [self.height / 2, ]
-        theme_text_color: 'Custom'
-        text_color: app.theme_cls.primary_dark
-        on_release: root.get_device_info()
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        size_hint: (.8, 1)
-        spacing: dp(2)
-
-        MDLabel:
-            text: root.device_name
-            theme_text_color: 'Custom'
-            font_style: 'Caption'
-            text_color: app.theme_cls.primary_dark
-
-        MDLabel:
-            text: root.device_brand
-            font_style:
-            theme_text_color: 'Custom'
-            font_style: 'Overline'
-            text_color: app.theme_cls.primary_dark
-
-        MDLabel:
-            text: root.device_status
-            theme_text_color: 'Custom'
-            font_style: 'Overline'
-            text_color: app.theme_cls.primary_dark
-
-    MDIconButton:
-        id: check_button
-        size_hint: (.2, 1)
-        icon: 'check'
-        icon_size: dp(32)
-        radius: [self.height / 2, ]
-        theme_text_color: 'Custom'
-        text_color: app.theme_cls.primary_dark
-        on_release: app.root.get_screen('home_screen').transfer_device(root)
 ###
 
 <HomeScreen>:
@@ -251,7 +201,7 @@
             pos_hint: {'x': .0, 'y': 0}
             padding: [dp(10), dp(10)]
 
-            BorderBox:
+            BorderFloatLayout:
                 size_hint: (1, 1)
                 pos_hint: {'x': 0, 'y': 0}
 
@@ -295,7 +245,7 @@
             padding: [dp(10), dp(10)]
             spacing: dp(10)
 
-            BorderBox:
+            BorderFloatLayout:
                 size_hint: (0.5, 1)
                 pos_hint: {'x': 0, 'y': 0}
 
@@ -333,6 +283,8 @@
                     radius: [self.height / 2, ]
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
+                    #on_release: Factory.SearchClientPopup().open()
+                    on_release: root.open_search_client_popup()
 
                 MDLabel:
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
@@ -390,7 +342,7 @@
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
                     size_hint: (None, None)
                     size: (dp(144), dp(32))
-                    text: 'email:'
+                    text: 'Email:'
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
@@ -430,7 +382,7 @@
                     icon_color: "white"
                     on_release: root.test_button()
 
-            BorderBox:
+            BorderFloatLayout:
                 #md_bg_color: 'green'
                 size_hint: (0.5, 1)
                 pos_hint: {'x': 0.5, 'y': 0}
@@ -588,7 +540,7 @@
             pos_hint: {'x': .8, 'y': 0}
             padding: [dp(10), dp(10)]
 
-            BorderBox:
+            BorderFloatLayout:
                 size_hint: (1, 1)
                 pos_hint: {'x': 0, 'y': 0}
 
@@ -625,3 +577,197 @@
                         spacing: dp(5)
                         size_hint_y: None
                         height: self.minimum_height
+
+
+#### Search Client Popup####
+<SearchClientPopup>
+    size_hint: (.4, .8)
+    background: ''
+    background_color: (1, 1, 1, 1)
+    title: "Search Client"
+    title_font: "JetBrainsMono"
+    bold: True
+    title_size: "18sp"
+    title_color: app.theme_cls.primary_dark
+    separator_color: app.theme_cls.primary_dark
+
+    content:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDBoxLayout:
+            size_hint: (1, .2)
+            padding: [dp(10), dp(10)]
+            spacing: dp(10)
+
+            MySpinner:
+                id: search_client_filter
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.3, .4)
+                text: "Search by:"
+                values: ['First Name', 'Last Name', 'Phone Number']
+
+            BorderTextInput:
+                id: search_client_text
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.7, .4)
+
+        MDBoxLayout:
+            size_hint: (1, .05)
+            padding: [dp(10), dp(0)]
+
+            MDLabel:
+                size_hint: (.3, 1)
+                text: "First Name"
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_dark
+                shorten: True
+                halign: 'center'
+                valign: 'center'
+
+            MDLabel:
+                size_hint: (.3, 1)
+                text: "Last Name"
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_dark
+                shorten: True
+                halign: 'center'
+                valign: 'center'
+
+            MDLabel:
+                size_hint: (.3, 1)
+                text: "Phone Number"
+                theme_text_color: 'Custom'
+                text_color: app.theme_cls.primary_dark
+                shorten: True
+                halign: 'center'
+                valign: 'center'
+
+            MDLabel:
+                size_hint: (.1, 1)
+                text: ""
+
+        MDBoxLayout:
+            size_hint: (1, .75)
+
+            ScrollView:
+                scroll_type: ['bars', 'content']
+                bar_width: 3
+                bar_color: app.theme_cls.primary_dark
+
+                GridLayout:
+                    id: search_client_container
+                    cols: 1
+                    padding: dp(10)
+                    spacing: dp(5)
+                    size_hint_y: None
+                    height: self.minimum_height
+
+
+#### Device Item View Model ####
+<DeviceStatusItemViewModel>
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(80)
+    padding: dp(10)
+    spacing: dp(5)
+
+    MDIconButton:
+        size_hint: (.2, 1)
+        icon: 'information-box'
+        icon_size: dp(32)
+        radius: [self.height / 2, ]
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        on_release: root.get_device_info()
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: (.8, 1)
+        spacing: dp(2)
+
+        MDLabel:
+            text: root.device_name
+            theme_text_color: 'Custom'
+            font_style: 'Caption'
+            text_color: app.theme_cls.primary_dark
+
+        MDLabel:
+            text: root.device_brand
+            font_style:
+            theme_text_color: 'Custom'
+            font_style: 'Overline'
+            text_color: app.theme_cls.primary_dark
+
+        MDLabel:
+            text: root.device_status
+            theme_text_color: 'Custom'
+            font_style: 'Overline'
+            text_color: app.theme_cls.primary_dark
+
+    MDIconButton:
+        id: check_button
+        size_hint: (.2, 1)
+        icon: 'check'
+        icon_size: dp(32)
+        radius: [self.height / 2, ]
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        on_release: app.root.get_screen('home_screen').transfer_device(root)
+
+
+#### Client Item View Model ####
+<ClientItemViewModel>
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(80)
+
+    canvas:
+        Color:
+            rgba: (0, 0, 0, .2)
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+
+    MDLabel:
+        text: root.client_first_name
+        size_hint: (.3, 1)
+        theme_text_color: 'Custom'
+        text_color: "black"
+        shorten: True
+        halign: 'center'
+        valign: 'center'
+
+    MDLabel:
+        text: root.client_last_name
+        size_hint: (.3, 1)
+        theme_text_color: 'Custom'
+        text_color: "black"
+        shorten: True
+        halign: 'center'
+        valign: 'center'
+
+    MDLabel:
+        text: root.client_phone_number
+        size_hint: (.3, 1)
+        theme_text_color: 'Custom'
+        text_color: "black"
+        shorten: True
+        halign: 'center'
+        valign: 'center'
+
+    MDIconButton:
+        size_hint: (.1, 1)
+        icon: 'home-import-outline'
+        icon_size: dp(32)
+        radius: [self.height / 2, ]
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        on_press: app.root.get_screen('home_screen').import_client_information(root)

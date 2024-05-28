@@ -4,5 +4,5 @@ from ..models.client import Client
 
 
 class ClientRepository(BaseRepository):
-    def __init__(self, session):
-        super().__init__(session)
+    def __init__(self):
+        super().__init__()

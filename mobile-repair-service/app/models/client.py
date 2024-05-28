@@ -14,4 +14,5 @@ class Client(Base):
     devices = relationship('Device', back_populates='client')
 
     def __repr__(self):
-        return f"<Client(id={self.id}, name={self.name}, phone_number={self.phone_number})>"
+        return (f"<Client(id={self.id}, first name={self.first_name}, last name={self.last_name}"
+                f", phone_number={self.phone_number})>")
