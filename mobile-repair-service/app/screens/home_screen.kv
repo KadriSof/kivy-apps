@@ -587,7 +587,7 @@
     title: "Search Client"
     title_font: "JetBrainsMono"
     bold: True
-    title_size: "18sp"
+    title_size: "20sp"
     title_color: app.theme_cls.primary_dark
     separator_color: app.theme_cls.primary_dark
 
@@ -694,7 +694,7 @@
         spacing: dp(2)
 
         MDLabel:
-            text: root.device_name
+            text: root.device_id
             theme_text_color: 'Custom'
             font_style: 'Caption'
             text_color: app.theme_cls.primary_dark
@@ -725,133 +725,178 @@
 
 #### Device Information Popup ####
 <DeviceInformationPopup>
-    size_hint: (.4, .8)
+    size_hint: (.5, .8)
     background: ''
     background_color: (1, 1, 1, 1)
     title: "Device Information"
     title_font: "JetBrainsMono"
     bold: True
-    title_size: "18sp"
+    title_size: "20sp"
     title_color: app.theme_cls.primary_dark
     separator_color: app.theme_cls.primary_dark
 
     content:
     MDBoxLayout:
-        orientation: 'vertical'
-        padding: [dp(0), dp(10)]
+        orientation: 'horizontal'
+        #padding: [dp(0), dp(10)]
+        spacing: dp(10)
 
         MDBoxLayout:
-            md_bg_color: "grey"
-            size_hint: (1, .1)
+            size_hint: (.5, 1)
+            orientation: 'vertical'
 
             MDLabel:
+                size_hint: (1, .1)
                 padding: [dp(10), dp(0)]
-                text: "Client Information:"
+                text: "Client"
+                font_style: "JetBrainsMono"
+                font_size: "18sp"
+                bold: True
 
-        MDGridLayout:
-            md_bg_color: "green"
-            size_hint: (1, .3)
-            cols: 2
-            rows: 4
+            MDGridLayout:
+                size_hint: (1, .2)
+                cols: 2
+                rows: 2
 
-            MDLabel:
-                size_hint: (.3, 1)
-                padding: [dp(10), dp(0)]
-                text: "First Name:"
+                canvas:
+                    Color:
+                        rgba: (0, 0, 0, .2)
+                    Line:
+                        rectangle: [self.x, self.y, self.width, self.height]
+                        width: dp(2)
 
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "John"
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Full Name:"
 
-            MDLabel:
-                size_hint: (.3, 1)
-                padding: [dp(10), dp(0)]
-                text: "Last Name:"
+                MDLabel:
+                    id: client_full_name
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "John Wick"
 
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "Wick"
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Phone Number"
 
-            MDLabel:
-                size_hint: (.3, 1)
-                padding: [dp(10), dp(0)]
-                text: "Phone Number:"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "58034395"
-
-            MDLabel:
-                size_hint: (.3, 1)
-                padding: [dp(10), dp(0)]
-                text: "Email:"
+                MDLabel:
+                    id: client_phone_number
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "58034395"
 
             MDLabel:
-                size_hint: (.7, 1)
+                size_hint: (1, .1)
                 padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
+                text: "Device"
+                font_style: "JetBrainsMono"
+                font_size: "18sp"
+                bold: True
+
+            MDGridLayout:
+                size_hint: (1, .6)
+                cols: 2
+                rows: 6
+
+                canvas:
+                    Color:
+                        rgba: (0, 0, 0, .2)
+                    Line:
+                        rectangle: [self.x, self.y, self.width, self.height]
+                        width: dp(2)
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Type:"
+
+                MDLabel:
+                    id: device_type
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Mobile"
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Brand:"
+
+                MDLabel:
+                    id: device_brand
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Oppo"
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Model:"
+
+                MDLabel:
+                    id: device_model
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Reno12"
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Fault Type:"
+
+                MDLabel:
+                    id: fault_type
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Hardware"
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Fault Code:"
+
+                MDLabel:
+                    id: fault_code
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "HF03"
+
+                MDLabel:
+                    size_hint: (.4, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Fault Level:"
+
+                MDLabel:
+                    id: fault_level
+                    size_hint: (.6, 1)
+                    padding: [dp(10), dp(0)]
+                    text: "Major"
 
         MDBoxLayout:
-            md_bg_color: "grey"
-            size_hint: (1, .1)
+            size_hint: (.5, 1)
+            orientation: 'vertical'
 
             MDLabel:
+                size_hint: (1, .1)
                 padding: [dp(10), dp(0)]
-                text: "Device Information:"
-
-        MDGridLayout:
-            md_bg_color: "green"
-            size_hint: (1, .5)
-            rows: 3
-            cols: 3
+                text: "Diagnostic Report"
+                font_style: "JetBrainsMono"
+                font_size: "18sp"
+                bold: True
 
             MDLabel:
-                size_hint: (.7, 1)
+                id: diagnostic_report
+                size_hint: (1, .9)
                 padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
 
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
+                canvas:
+                    Color:
+                        rgba: (0, 0, 0, .2)
+                    Line:
+                        rectangle: [self.x, self.y, self.width, self.height]
+                        width: dp(2)
 
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
-
-            MDLabel:
-                size_hint: (.7, 1)
-                padding: [dp(10), dp(0)]
-                text: "babayaga@gmail.com"
 
 #### Client Item View Model ####
 <ClientItemViewModel>

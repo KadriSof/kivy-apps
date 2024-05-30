@@ -29,43 +29,16 @@ class HomeScreen(Screen):
         print(pending_list)
 
         for device in pending_list:
-            device_status_item = DeviceStatusItemViewModel(
-                device_id=str(device.device_id),
-                device_name=f"Device n° {device.device_id}",
-                device_brand=device.device_brand,
-            )
-            self.ids.pending_container.add_widget(device_status_item)
+            device_view_model = DeviceStatusItemViewModel.from_entity(device)
+            self.ids.pending_container.add_widget(device_view_model)
 
     def load_repaired_devices(self):
         device_service = DeviceService()
         complete_list = device_service.list_devices_by_status(status="Repaired")
 
         for device in complete_list:
-            device_status_item = DeviceStatusItemViewModel(
-                device_id=str(device.device_id),
-                device_name=f"Device n° {device.device_id}",
-                device_brand=device.device_brand,
-                device_status=device.device_status,
-            )
+            device_status_item = DeviceStatusItemViewModel.from_entity(device)
             self.ids.complete_container.add_widget(device_status_item)
-
-    def open_search_client_popup(self):
-        self.search_client_popup.open()
-
-    def open_search_device_popup(self):
-        self.search_device_popup.open()
-
-    def open_device_info_popup(self):
-        self.device_info_popup.open()
-
-    def dismiss_search_client_popup(self):
-        self.search_client_popup.dismiss()
-
-    def dismiss_search_device_popup(self):
-        self.search_device_popup.dismiss()
-
-    def dismiss_device_info_popup(self):
-        self.device_info_popup.dismiss()
 
     def transfer_device(self, device_status_item_view_model):
         device_service = DeviceService()
@@ -107,11 +80,26 @@ class HomeScreen(Screen):
             logging.exception(f"HomeScreen: Failed to register device: {device}")
 
     def add_device_to_pending_list(self, device):
-        device_status_item = DeviceStatusItemViewModel(
-            device_name=f"Device n° {device.device_id}",
-            device_brand=device.device_brand,
-        )
+        device_status_item = DeviceStatusItemViewModel.from_entity(device)
         self.ids.pending_container.add_widget(device_status_item)
+
+    def open_search_client_popup(self):
+        self.search_client_popup.open()
+
+    def open_search_device_popup(self):
+        self.search_device_popup.open()
+
+    def open_device_info_popup(self):
+        self.device_info_popup.open()
+
+    def dismiss_search_client_popup(self):
+        self.search_client_popup.dismiss()
+
+    def dismiss_search_device_popup(self):
+        self.search_device_popup.dismiss()
+
+    def dismiss_device_info_popup(self):
+        self.device_info_popup.dismiss()
 
     # TODO: Adjust the information entry configuration logic.
     def set_fault_type(self, value):
@@ -169,21 +157,44 @@ class HomeScreen(Screen):
 
 class DeviceStatusItemViewModel(MDBoxLayout):
     device_id = StringProperty()
-    device_name = StringProperty()
+    device_type = StringProperty()
     device_brand = StringProperty()
+    device_model = StringProperty()
+    fault_code = StringProperty()
+    fault_type = StringProperty()
+    fault_level = StringProperty()
     device_status = StringProperty(defaultvalue="Defective")
     device_info_popup = None
 
-    def __init__(self, device_id, device_name, device_brand, device_status="Defective", *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.device_id = device_id
-        self.device_name = device_name
-        self.device_brand = device_brand
-        self.device_status = device_status
         self.device_info_popup = DeviceInformationPopup()
 
-    def get_device_info(self):
-        print(self.device_status)
+    # Factory method:
+    @classmethod
+    def from_entity(cls, device_entity: DeviceEntity):
+        return cls(
+            device_id= f"DEVICE ID: {format(device_entity.device_id, '04d')}",
+            device_type=device_entity.device_type,
+            device_brand=device_entity.device_brand,
+            device_model=device_entity.device_model,
+            fault_code=device_entity.fault_code,
+            fault_type=device_entity.fault_type,
+            fault_level=device_entity.fault_level,
+            device_status=device_entity.device_status
+        )
+
+    def to_entity(self):
+        return DeviceEntity(
+            device_id=int(self.device_id),
+            device_type=self.device_type,
+            device_brand=self.device_brand,
+            device_model=self.device_model,
+            fault_code=self.fault_code,
+            fault_type=self.fault_type,
+            fault_level=self.fault_level,
+            device_status=self.device_status
+        )
 
     def open_device_info_popup(self):
         self.device_info_popup.open()
