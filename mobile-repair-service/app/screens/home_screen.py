@@ -15,9 +15,11 @@ class HomeScreen(Screen):
 
     search_client_popup = None
     search_device_popup = None
+    device_info_popup = None
 
     def on_enter(self, *args):
         self.search_client_popup = SearchClientPopup()
+        self.device_info_popup = DeviceInformationPopup()
         self.load_pending_devices()
         self.load_repaired_devices()
 
@@ -53,11 +55,17 @@ class HomeScreen(Screen):
     def open_search_device_popup(self):
         self.search_device_popup.open()
 
+    def open_device_info_popup(self):
+        self.device_info_popup.open()
+
     def dismiss_search_client_popup(self):
         self.search_client_popup.dismiss()
 
     def dismiss_search_device_popup(self):
         self.search_device_popup.dismiss()
+
+    def dismiss_device_info_popup(self):
+        self.device_info_popup.dismiss()
 
     def transfer_device(self, device_status_item_view_model):
         device_service = DeviceService()
@@ -116,9 +124,11 @@ class HomeScreen(Screen):
         if value == "Mobile":
             self.ids.device_brand.values = \
                 ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia', 'Other']
+
         elif value == "PC":
             self.ids.device_brand.values = \
                 ['Asus', 'Apple', 'MSI', 'HP', 'Dell', 'Lenovo', 'Toshiba', 'Samsung', 'Other']
+
         else:
             self.ids.device_brand.values = \
                 ['Apple', 'Google', 'OnePlus', 'Oppo', 'Samsung', 'Vivo', 'Xiaomi', 'Other']
@@ -162,6 +172,7 @@ class DeviceStatusItemViewModel(MDBoxLayout):
     device_name = StringProperty()
     device_brand = StringProperty()
     device_status = StringProperty(defaultvalue="Defective")
+    device_info_popup = None
 
     def __init__(self, device_id, device_name, device_brand, device_status="Defective", *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -169,9 +180,13 @@ class DeviceStatusItemViewModel(MDBoxLayout):
         self.device_name = device_name
         self.device_brand = device_brand
         self.device_status = device_status
+        self.device_info_popup = DeviceInformationPopup()
 
     def get_device_info(self):
         print(self.device_status)
+
+    def open_device_info_popup(self):
+        self.device_info_popup.open()
 
     def check_button_pressed(self, transfer_callback):
         """Handle the check button press."""
@@ -190,6 +205,10 @@ class ClientItemViewModel(MDBoxLayout):
         self.client_last_name = client_last_name
         self.client_email = client_email if client_email else ""
         self.client_phone_number = client_phone_number
+
+
+class DeviceInformationPopup(Popup):
+    pass
 
 
 class DeviceIemViewModel(MDBoxLayout):

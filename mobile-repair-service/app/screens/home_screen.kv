@@ -686,7 +686,7 @@
         radius: [self.height / 2, ]
         theme_text_color: 'Custom'
         text_color: app.theme_cls.primary_dark
-        on_release: root.get_device_info()
+        on_release: root.open_device_info_popup()
 
     MDBoxLayout:
         orientation: 'vertical'
@@ -722,6 +722,136 @@
         text_color: app.theme_cls.primary_dark
         on_release: app.root.get_screen('home_screen').transfer_device(root)
 
+
+#### Device Information Popup ####
+<DeviceInformationPopup>
+    size_hint: (.4, .8)
+    background: ''
+    background_color: (1, 1, 1, 1)
+    title: "Device Information"
+    title_font: "JetBrainsMono"
+    bold: True
+    title_size: "18sp"
+    title_color: app.theme_cls.primary_dark
+    separator_color: app.theme_cls.primary_dark
+
+    content:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: [dp(0), dp(10)]
+
+        MDBoxLayout:
+            md_bg_color: "grey"
+            size_hint: (1, .1)
+
+            MDLabel:
+                padding: [dp(10), dp(0)]
+                text: "Client Information:"
+
+        MDGridLayout:
+            md_bg_color: "green"
+            size_hint: (1, .3)
+            cols: 2
+            rows: 4
+
+            MDLabel:
+                size_hint: (.3, 1)
+                padding: [dp(10), dp(0)]
+                text: "First Name:"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "John"
+
+            MDLabel:
+                size_hint: (.3, 1)
+                padding: [dp(10), dp(0)]
+                text: "Last Name:"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "Wick"
+
+            MDLabel:
+                size_hint: (.3, 1)
+                padding: [dp(10), dp(0)]
+                text: "Phone Number:"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "58034395"
+
+            MDLabel:
+                size_hint: (.3, 1)
+                padding: [dp(10), dp(0)]
+                text: "Email:"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+        MDBoxLayout:
+            md_bg_color: "grey"
+            size_hint: (1, .1)
+
+            MDLabel:
+                padding: [dp(10), dp(0)]
+                text: "Device Information:"
+
+        MDGridLayout:
+            md_bg_color: "green"
+            size_hint: (1, .5)
+            rows: 3
+            cols: 3
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
+
+            MDLabel:
+                size_hint: (.7, 1)
+                padding: [dp(10), dp(0)]
+                text: "babayaga@gmail.com"
 
 #### Client Item View Model ####
 <ClientItemViewModel>
