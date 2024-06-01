@@ -1,5 +1,8 @@
 import logging
 from functools import wraps
+
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from pymysql.err import IntegrityError as PyMySQLError
 from app.database.session import get_session
 
 

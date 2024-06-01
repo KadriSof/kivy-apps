@@ -8,7 +8,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 
 from app.services.device_service import DeviceService
 from app.services.client_service import ClientService
+from app.entities.client import Client as ClientEntity
 from app.entities.device import Device as DeviceEntity
+from app.utils.validation import validate_client_registration, show_error_message, show_info_message
 
 
 class HomeScreen(Screen):
@@ -16,6 +18,7 @@ class HomeScreen(Screen):
     search_client_popup = None
     search_device_popup = None
     device_info_popup = None
+    current_client_id = None
 
     def on_enter(self, *args):
         self.search_client_popup = SearchClientPopup()
@@ -26,7 +29,6 @@ class HomeScreen(Screen):
     def load_pending_devices(self):
         device_service = DeviceService()
         pending_list = device_service.list_devices_by_status(status="Defective")
-        print(pending_list)
 
         for device in pending_list:
             device_view_model = DeviceStatusItemViewModel.from_entity(device)
@@ -51,7 +53,7 @@ class HomeScreen(Screen):
 
         else:
             self.ids.complete_container.remove_widget(device_status_item_view_model)
-            # TODO: Add the a call for the "register_device()" method.
+            # TODO: update the device 'delivered_at' status in the database.
 
     def import_client_information(self, client_item_view_model):
         self.ids.client_first_name.text = client_item_view_model.client_first_name
@@ -60,24 +62,50 @@ class HomeScreen(Screen):
         self.ids.client_email.text = client_item_view_model.client_email
         self.dismiss_search_client_popup()
 
-    def register_device(self):
-        device_type = self.ids.device_type.text
-        device_brand = self.ids.device_brand.text
-        device_model = self.ids.device_model.text
-        fault_type = self.ids.fault_type.text
-        fault_code = self.ids.fault_code.text
-        fault_level = self.ids.fault_level.text
+    def register_client(self):
+        if not validate_client_registration(self):
+            return
 
-        device = DeviceEntity(device_type, device_brand, device_model, fault_type, fault_code, fault_level)
+        client_first_name = self.ids.client_first_name.text
+        client_last_name = self.ids.client_last_name.text
+        client_phone_number = self.ids.client_phone_number.text
+        client_email = self.ids.client_email.text
+
+        client = ClientEntity(client_first_name, client_last_name, client_phone_number, client_email)
+        client_service = ClientService()
+
+        response = client_service.register_client(client)
+
+        if response.success:
+            client = response.data
+            self.current_client_id = client.client_id
+            self.ids.register_device_button.disabled = False
+            logging.info("HomeScreen: Registered client successfully.")
+            show_info_message(self, response.message)
+
+        else:
+            logging.exception(f"HomeScreen: Failed to register client: {client}.")
+            show_error_message(self, response.message)
+
+    def register_device(self):
         device_service = DeviceService()
+        device = DeviceEntity()
+
+        device.device_type = self.ids.device_type.text
+        device.device_brand = self.ids.device_brand.text
+        device.device_model = self.ids.device_model.text
+        device.fault_type = self.ids.fault_type.text
+        device.fault_code = self.ids.fault_code.text
+        device.fault_level = self.ids.fault_level.text
+        device.client_id = self.current_client_id
 
         try:
             device = device_service.register_device(device)
             self.add_device_to_pending_list(device)
-            logging.info(f"HomeScreen: Registered device: {device}")
+            logging.info(f"HomeScreen: Registered device successfully.")
 
         except Exception as e:
-            logging.exception(f"HomeScreen: Failed to register device: {device}")
+            logging.exception(f"HomeScreen: Failed to register device: {device}.")
 
     def add_device_to_pending_list(self, device):
         device_status_item = DeviceStatusItemViewModel.from_entity(device)

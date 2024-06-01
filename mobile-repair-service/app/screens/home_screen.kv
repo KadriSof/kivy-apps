@@ -380,10 +380,9 @@
                     line_color: "darkgrey"
                     theme_icon_color: "Custom"
                     icon_color: "white"
-                    on_release: root.test_button()
+                    on_release: root.register_client()
 
             BorderFloatLayout:
-                #md_bg_color: 'green'
                 size_hint: (0.5, 1)
                 pos_hint: {'x': 0.5, 'y': 0}
 
@@ -521,6 +520,7 @@
                     values: ['Critical', 'Major', 'Minor']
 
                 MDRectangleFlatIconButton:
+                    id: register_device_button
                     pos: ((self.parent.x + self.parent.width - self.width - dp(16)), (self.parent.y + dp(16)))
                     size_hint: (0.25, 0.05)
                     md_bg_color: app.theme_cls.primary_dark
@@ -532,6 +532,7 @@
                     line_color: "darkgrey"
                     theme_icon_color: "Custom"
                     icon_color: "white"
+                    disabled: True
                     on_release: root.register_device()
 
 

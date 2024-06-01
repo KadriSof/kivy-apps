@@ -15,3 +15,13 @@ class DeviceRepository(BaseRepository):
     def update(self, device, session):
         session.add(device)
         session.commit()
+
+    def update_field(self, device_id, field_name, new_value, session):
+        device = self.get_by_id(device_id, session)
+
+        if device:
+            setattr(device, field_name, new_value)
+            session.commit()
+            return device
+
+        return None
