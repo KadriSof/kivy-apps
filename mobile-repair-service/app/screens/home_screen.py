@@ -1,5 +1,4 @@
 import logging
-import re
 
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
@@ -10,7 +9,7 @@ from app.services.device_service import DeviceService
 from app.services.client_service import ClientService
 from app.entities.client import Client as ClientEntity
 from app.entities.device import Device as DeviceEntity
-from app.utils.validation import validate_client_registration, show_error_message, show_info_message
+import app.utils.ui_utils as ui_utilities
 
 
 class HomeScreen(Screen):
@@ -63,7 +62,7 @@ class HomeScreen(Screen):
         self.dismiss_search_client_popup()
 
     def register_client(self):
-        if not validate_client_registration(self):
+        if not ui_utilities.validate_client_registration(self):
             return
 
         client_first_name = self.ids.client_first_name.text
@@ -81,11 +80,11 @@ class HomeScreen(Screen):
             self.current_client_id = client.client_id
             self.ids.register_device_button.disabled = False
             logging.info("HomeScreen: Registered client successfully.")
-            show_info_message(self, response.message)
+            ui_utilities.show_info_message(self, response.message)
 
         else:
             logging.exception(f"HomeScreen: Failed to register client: {client}.")
-            show_error_message(self, response.message)
+            ui_utilities.show_error_message(self, response.message)
 
     def register_device(self):
         device_service = DeviceService()
@@ -105,11 +104,17 @@ class HomeScreen(Screen):
             logging.info(f"HomeScreen: Registered device successfully.")
 
         except Exception as e:
-            logging.exception(f"HomeScreen: Failed to register device: {device}.")
+            logging.exception(f"HomeScreen: Failed to register device: {device}.\n Exception: {e}")
 
     def add_device_to_pending_list(self, device):
         device_status_item = DeviceStatusItemViewModel.from_entity(device)
         self.ids.pending_container.add_widget(device_status_item)
+
+    def new_client_entry(self):
+        ui_utilities.new_client_entry(self)
+
+    def new_device_entry(self):
+        ui_utilities.new_device_entry(self)
 
     def open_search_client_popup(self):
         self.search_client_popup.open()
@@ -129,58 +134,24 @@ class HomeScreen(Screen):
     def dismiss_device_info_popup(self):
         self.device_info_popup.dismiss()
 
-    # TODO: Adjust the information entry configuration logic.
     def set_fault_type(self, value):
-        if value == "Hardware":
-            self.ids.fault_code.values = ["HF01", "HF02", "HF03", "HF04", "HF05"]
-        else:
-            self.ids.fault_code.values = ["FF01", "FF02", "FF03", "FF04", "FF05"]
+        ui_utilities.set_fault_type(self, value)
 
     def set_device_brand(self, value):
-        if value == "Mobile":
-            self.ids.device_brand.values = \
-                ['Samsung', 'Huawei', 'Oppo', 'Xiaomi', 'Iphone', 'Nokia', 'Other']
-
-        elif value == "PC":
-            self.ids.device_brand.values = \
-                ['Asus', 'Apple', 'MSI', 'HP', 'Dell', 'Lenovo', 'Toshiba', 'Samsung', 'Other']
-
-        else:
-            self.ids.device_brand.values = \
-                ['Apple', 'Google', 'OnePlus', 'Oppo', 'Samsung', 'Vivo', 'Xiaomi', 'Other']
+        ui_utilities.set_device_brand(self, value)
 
     def validate_name(self, widget):
-        if widget.text == "":
-            print("client name must not be empty")
-            self.ids.input_validation.text = \
-                "[color=#ff0000]*[/color] [i]Client name must not be empty.[/i]"
-
-    def validate_email(self, widget):
-        if not widget.focus and widget.text != "":
-            if not self.verify_email(widget):
-                self.ids.input_validation.text = \
-                    "[color=#ff0000]*[/color] [i]Email format is not correct.[/i]"
-        else:
-            self.ids.input_validation.text = ""
+        ui_utilities.validate_name(self, widget)
 
     def validate_phone_number(self, widget):
-        if widget.text == "":
-            self.ids.input_validation.text = \
-                "[color=#ff0000]*[/color] [i]Client phone number must not be empty.[/i]"
+        ui_utilities.validate_phone_number(self, widget)
 
-        if len(widget.text) != 8:
-            return print("invalid phone number!")
+    def validate_email(self, widget):
+        ui_utilities.validate_email(self, widget)
 
     @staticmethod
     def verify_email(widget):
-        pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-
-        if re.match(pattern, widget.text):
-            print("correct email!")
-            return True
-        else:
-            print("incorrect email!")
-            return False
+        ui_utilities.verify_email(widget)
 
 
 class DeviceStatusItemViewModel(MDBoxLayout):
@@ -202,7 +173,7 @@ class DeviceStatusItemViewModel(MDBoxLayout):
     @classmethod
     def from_entity(cls, device_entity: DeviceEntity):
         return cls(
-            device_id= f"DEVICE ID: {format(device_entity.device_id, '04d')}",
+            device_id=f"DEVICE ID: {format(device_entity.device_id, '04d')}",
             device_type=device_entity.device_type,
             device_brand=device_entity.device_brand,
             device_model=device_entity.device_model,

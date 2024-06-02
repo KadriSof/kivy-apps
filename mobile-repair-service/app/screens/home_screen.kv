@@ -129,13 +129,14 @@
                 size_hint: (None, None)
                 size: (dp(128), dp(80))
                 md_bg_color: "white"
-                text: "Customers"
+                text: "Clients"
                 font_name: "JetBrainsMono"
                 font_style: "Button"
                 text_color: app.theme_cls.primary_dark
                 line_color: "grey"
                 color: "black"
                 shorten: True
+                on_release: root.open_search_client_popup()
 
             MDRaisedButton:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -267,24 +268,22 @@
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: ((self.parent.x + self.parent.width - dp(188)), (self.parent.y + self.parent.height - dp(94)))
+                    pos: ((self.parent.x + self.parent.width - dp(164)), (self.parent.y + self.parent.height - dp(94)))
                     size_hint: (None, None)
-                    size: (dp(144), dp(32))
-                    text: "Search Client"
+                    size: (dp(112), dp(32))
+                    text: "New Client"
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
-                    size_hint: (None, None)
-                    icon: 'file-search'
+                    icon: 'new-box'
                     icon_size: dp(32)
                     radius: [self.height / 2, ]
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
-                    #on_release: Factory.SearchClientPopup().open()
-                    on_release: root.open_search_client_popup()
+                    on_release: root.new_client_entry()
 
                 MDLabel:
                     pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(150)))
@@ -301,6 +300,7 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(176), dp(32))
                     multiline: False
+                    halign: 'center'
                     on_text_validate: root.validate_name(self)
 
                 MDLabel:
@@ -318,6 +318,7 @@
                     size: (self.parent.width - dp(176), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(198))
                     multiline: False
+                    halign: 'center'
                     on_text_validate: root.validate_name(self)
 
                 MDLabel:
@@ -336,6 +337,7 @@
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(246))
                     input_filter: 'int'
                     multiline: False
+                    halign: 'center'
                     on_text_validate: root.validate_phone_number(self)
 
                 MDLabel:
@@ -352,8 +354,8 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(176), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(294))
-                    line_anim: False
                     multiline: False
+                    halign: 'center'
                     cursor_color: app.theme_cls.primary_dark
                     on_text_validate: root.verify_email(self)
                     on_focus: root.validate_email(self)
@@ -404,23 +406,23 @@
                     text_color: app.theme_cls.primary_dark
 
                 MDLabel:
-                    pos: ((self.parent.x + self.parent.width - dp(188)), (self.parent.y + self.parent.height - dp(94)))
+                    pos: ((self.parent.x + self.parent.width - dp(164)), (self.parent.y + self.parent.height - dp(94)))
                     size_hint: (None, None)
-                    size: (dp(144), dp(32))
-                    text: "Search Device"
+                    size: (dp(112), dp(32))
+                    text: "New Device"
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
 
                 MDIconButton:
                     size_hint: (None, None)
-                    #size: (dp(100), dp(100))
                     pos: ((self.parent.x + self.parent.width - dp(64)), (self.parent.y + self.parent.height - dp(106)))
-                    icon: 'file-search'
+                    icon: 'new-box'
                     icon_size: dp(32)
                     radius: [self.height / 2, ]
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
+                    on_release: root.new_device_entry()
 
                 MDLabel:
                     text: 'Device Type:'
@@ -469,15 +471,16 @@
                     size_hint: (None, None)
                     size: (self.parent.width - dp(167), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(246))
+                    halign: 'center'
 
                 MDLabel:
+                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
+                    size_hint: (None, None)
+                    size: (dp(144), dp(32))
                     text: "Fault Type:"
                     font_style: "JetBrainsMono"
                     theme_text_color: 'Custom'
                     text_color: app.theme_cls.primary_dark
-                    size_hint: (None, None)
-                    size: (dp(144), dp(32))
-                    pos: ((self.parent.x + dp(16)), (self.parent.y + self.parent.height - dp(294)))
 
                 MySpinner:
                     id: fault_type
