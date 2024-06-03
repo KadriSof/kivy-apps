@@ -20,7 +20,6 @@ class Device(Base):
     client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
     client = relationship('Client', back_populates='devices', lazy='joined')
 
-    # diagnostic_report = relationship('DiagnosticReport', uselist=False, backref='device')
     diagnostic_report = relationship('DiagnosticReport', uselist=False, back_populates='device')
 
     def __repr__(self):
