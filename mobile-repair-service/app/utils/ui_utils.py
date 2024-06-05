@@ -86,11 +86,11 @@ def new_client_entry(instance):
     instance.ids.client_last_name.text = ''
     instance.ids.client_phone_number.text = ''
     instance.ids.client_email.text = ''
-    instance.ids.register_device.disabled = True
+    instance.ids.register_device_button.disabled = True
 
 
 def new_device_entry(instance):
-    instance.ids.device_type.text = 'Mobile'
+    instance.ids.device_type.text = ''
     instance.ids.device_brand.text = ''
     instance.ids.device_model.text = ''
     instance.ids.fault_type.text = ''

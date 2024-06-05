@@ -225,10 +225,12 @@ class DeviceIemViewModel(MDBoxLayout):
     pass
 
 
+# TODO: Add factory method like in 'DeviceStatusItemViewModel'
 class SearchClientPopup(Popup):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.client_service = None
+        self.search_filter = "First Name"
 
     def on_open(self):
         client_service = ClientService()
@@ -236,11 +238,36 @@ class SearchClientPopup(Popup):
         self.load_client_items(clients_list)
 
     def load_client_items(self, clients_list):
-        for i in range(len(clients_list)):
+        self.ids.search_client_container.clear_widgets()
+
+        for client in clients_list:
             client_item = ClientItemViewModel(
-                client_first_name=clients_list[i].first_name,
-                client_last_name=clients_list[i].last_name,
-                client_email=clients_list[i].email,
-                client_phone_number=clients_list[i].phone_number,
+                client_first_name=client.first_name,
+                client_last_name=client.last_name,
+                client_phone_number=client.phone_number,
+                client_email=client.email,
             )
+
             self.ids.search_client_container.add_widget(client_item)
+
+    def filter_by(self, search_filter):
+        self.search_filter = search_filter
+
+    def search_client(self, search_text):
+        self.client_service = ClientService()
+
+        if search_text != "":
+            if self.search_filter == "First Name":
+                clients = self.client_service.list_clients_by_first_name(search_text)
+            elif self.search_filter == "Last Name":
+                clients = self.client_service.list_clients_by_last_name(search_text)
+            elif self.search_filter == "Phone Number":
+                clients = self.client_service.list_clients_by_phone_number(search_text)
+            else:
+                clients = self.client_service.list_clients()
+
+            self.load_client_items(clients)
+
+        else:
+            clients = self.client_service.list_clients()
+            self.load_client_items(clients)

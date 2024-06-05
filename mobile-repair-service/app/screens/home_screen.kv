@@ -610,11 +610,13 @@
                 size_hint: (.3, .4)
                 text: "Search by:"
                 values: ['First Name', 'Last Name', 'Phone Number']
+                on_text: root.filter_by(self.text)
 
             BorderTextInput:
                 id: search_client_text
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.7, .4)
+                on_text: root.search_client(self.text)
 
         MDBoxLayout:
             size_hint: (1, .05)

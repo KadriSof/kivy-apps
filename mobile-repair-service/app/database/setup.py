@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker
 from app.models.base import Base
 from app.models.client import Client
 from app.models.device import Device
-from app.models.repair_order import RepairOrder
 
 from app.utils.database_utils import check_database_connection, get_database_url
 

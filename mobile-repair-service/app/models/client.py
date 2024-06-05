@@ -11,7 +11,7 @@ class Client(Base):
     email = Column(String(100), unique=True)
     phone_number = Column(String(20), unique=True)
 
-    devices = relationship('Device', back_populates='client')
+    devices = relationship('Device', back_populates='clients')
 
     def __repr__(self):
         return (f"<Client(id={self.id}, first name={self.first_name}, last name={self.last_name}"

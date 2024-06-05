@@ -11,7 +11,7 @@ class DiagnosticReport(Base):
     report_details = Column(String(255), nullable=False)
     resolved = Column(Boolean, default=False)
 
-    device = relationship('Device', back_populates='diagnostic_report')
+    devices = relationship('Device', back_populates='diagnostic_reports')
 
     def __repr__(self):
         return f"<DiagnosticReport(id={self.id}, device_id={self.device_id}, resolved={self.resolved})>"

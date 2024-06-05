@@ -18,9 +18,9 @@ class Device(Base):
     status = Column(String(20), nullable=False, default='pending')
 
     client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
-    client = relationship('Client', back_populates='devices', lazy='joined')
+    clients = relationship('Client', back_populates='devices', lazy='joined')
 
-    diagnostic_report = relationship('DiagnosticReport', uselist=False, back_populates='device')
+    diagnostic_reports = relationship('DiagnosticReport', uselist=False, back_populates='devices')
 
     def __repr__(self):
         return f"<Device(id={self.id}, brand={self.brand}, model={self.model}, status={self.status})>"

@@ -34,5 +34,5 @@ def get_database_url():
 
     check_database_connection()
     database_url = f'mysql+pymysql://{db_username}:{db_password}@{db_host}/{db_name}'
-
+    print(database_url)
     return database_url

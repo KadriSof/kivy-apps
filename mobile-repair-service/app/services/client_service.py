@@ -65,3 +65,18 @@ class ClientService:
     def list_clients(self, session=None):
         clients = self.client_repository.list(ClientModel, session=session)
         return [self._convert_to_entity(client) for client in clients]
+
+    @managed_session
+    def list_clients_by_first_name(self, first_name, session=None):
+        clients = self.client_repository.filter_by_first_name(first_name, session=session)
+        return [self._convert_to_entity(client) for client in clients]
+
+    @managed_session
+    def list_clients_by_last_name(self, last_name, session=None):
+        clients = self.client_repository.filter_by_last_name(last_name, session=session)
+        return [self._convert_to_entity(client) for client in clients]
+
+    @managed_session
+    def list_clients_by_phone_number(self, phone_number, session=None):
+        clients = self.client_repository.filter_by_phone_number(phone_number, session=session)
+        return [self._convert_to_entity(client) for client in clients]
