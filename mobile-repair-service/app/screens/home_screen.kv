@@ -700,7 +700,7 @@
         spacing: dp(2)
 
         MDLabel:
-            text: root.device_id
+            text: f"DEVICE ID: {format(root.device_id, '04d')}"
             theme_text_color: 'Custom'
             font_style: 'Caption'
             text_color: app.theme_cls.primary_dark
@@ -780,7 +780,8 @@
                     id: client_full_name
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "John Wick"
+                    #text: "John Wick"
+                    text: root.client_full_name
 
                 MDLabel:
                     size_hint: (.4, 1)
@@ -891,17 +892,39 @@
                 font_size: "18sp"
                 bold: True
 
-            MDLabel:
-                id: diagnostic_report
+            BorderBoxLayout:
+                id: diagnostic_report_section
                 size_hint: (1, .9)
-                padding: [dp(10), dp(0)]
+                orientation: 'vertical'
+                padding: [dp(10), dp(10)]
+                spacing: dp(10)
 
-                canvas:
-                    Color:
-                        rgba: (0, 0, 0, .2)
-                    Line:
-                        rectangle: [self.x, self.y, self.width, self.height]
-                        width: dp(2)
+                MDLabel:
+                    id: report_date
+                    size_hint: (1, .1)
+                    padding: [dp(10), dp(0)]
+                    text: "06/06/2024"
+
+                BorderTextInput:
+                    id: report_details
+                    size_hint: (1, .9)
+                    padding: [dp(10), dp(10)]
+                    text_size: self.size
+                    valign: 'top'
+
+                MDRectangleFlatIconButton:
+                    id: register_device_button
+                    pos_hint: {'center_x': .875, 'center_y': .5}
+                    size_hint: (0.25, 0.05)
+                    md_bg_color: app.theme_cls.primary_dark
+                    icon: "content-save"
+                    text: "save"
+                    font_style: "Button"
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    line_color: "darkgrey"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
 
 
 #### Client Item View Model ####

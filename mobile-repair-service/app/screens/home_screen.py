@@ -1,6 +1,6 @@
 import logging
 
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, NumericProperty
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -155,47 +155,38 @@ class HomeScreen(Screen):
 
 
 class DeviceStatusItemViewModel(MDBoxLayout):
-    device_id = StringProperty()
-    device_type = StringProperty()
+    device_id = NumericProperty()
     device_brand = StringProperty()
-    device_model = StringProperty()
-    fault_code = StringProperty()
-    fault_type = StringProperty()
-    fault_level = StringProperty()
-    device_status = StringProperty(defaultvalue="Defective")
+    device_status = StringProperty()
+    device_entity = None
+    client_entity = None
     device_info_popup = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.device_info_popup = DeviceInformationPopup()
+        self.get_client_entity()
+
+    def get_client_entity(self):
+        client_service = ClientService()
+        self.client_entity = client_service.get_client(self.device_id)
+        print(self.client_entity)
 
     # Factory method:
     @classmethod
     def from_entity(cls, device_entity: DeviceEntity):
-        return cls(
-            device_id=f"DEVICE ID: {format(device_entity.device_id, '04d')}",
-            device_type=device_entity.device_type,
+        obj = cls(
+            device_id=device_entity.device_id,
             device_brand=device_entity.device_brand,
-            device_model=device_entity.device_model,
-            fault_code=device_entity.fault_code,
-            fault_type=device_entity.fault_type,
-            fault_level=device_entity.fault_level,
-            device_status=device_entity.device_status
+            device_status=device_entity.device_status,
         )
-
-    def to_entity(self):
-        return DeviceEntity(
-            device_id=int(self.device_id),
-            device_type=self.device_type,
-            device_brand=self.device_brand,
-            device_model=self.device_model,
-            fault_code=self.fault_code,
-            fault_type=self.fault_type,
-            fault_level=self.fault_level,
-            device_status=self.device_status
-        )
+        obj.device_entity = device_entity
+        return obj
 
     def open_device_info_popup(self):
+        self.device_info_popup.client_full_name = "Baki Hanma"
+        self.device_info_popup.device_entity = self.device_entity
+        self.device_info_popup.client_entity = self.client_entity
         self.device_info_popup.open()
 
     def check_button_pressed(self, transfer_callback):
@@ -218,24 +209,40 @@ class ClientItemViewModel(MDBoxLayout):
 
 
 class DeviceInformationPopup(Popup):
-    pass
+    client_full_name = StringProperty()
+    client_phone_number = StringProperty()
+    device_id = StringProperty()
+    device_type = StringProperty()
+    device_brand = StringProperty()
+    device_model = StringProperty()
+    fault_code = StringProperty()
+    fault_type = StringProperty()
+    fault_level = StringProperty()
+    device_entity = None
+    client_entity = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
+
+    def on_open(self):
+        print(self.device_entity)
+        print(self.client_entity)
 
 
 class DeviceIemViewModel(MDBoxLayout):
     pass
 
 
-# TODO: Add factory method like in 'DeviceStatusItemViewModel'
 class SearchClientPopup(Popup):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.client_service = None
+        self.client_service = ClientService()
+        self.clients_list = list()
         self.search_filter = "First Name"
 
     def on_open(self):
-        client_service = ClientService()
-        clients_list = client_service.list_clients()
-        self.load_client_items(clients_list)
+        self.clients_list = self.client_service.list_clients()
+        self.load_client_items(self.clients_list)
 
     def load_client_items(self, clients_list):
         self.ids.search_client_container.clear_widgets()
@@ -254,20 +261,18 @@ class SearchClientPopup(Popup):
         self.search_filter = search_filter
 
     def search_client(self, search_text):
-        self.client_service = ClientService()
-
-        if search_text != "":
-            if self.search_filter == "First Name":
-                clients = self.client_service.list_clients_by_first_name(search_text)
-            elif self.search_filter == "Last Name":
-                clients = self.client_service.list_clients_by_last_name(search_text)
-            elif self.search_filter == "Phone Number":
-                clients = self.client_service.list_clients_by_phone_number(search_text)
-            else:
-                clients = self.client_service.list_clients()
-
-            self.load_client_items(clients)
-
+        if search_text:
+            filtered_clients = self.filter_clients(search_text)
+            self.load_client_items(filtered_clients)
         else:
-            clients = self.client_service.list_clients()
-            self.load_client_items(clients)
+            self.load_client_items(self.clients_list)
+
+    def filter_clients(self, search_text):
+        if self.search_filter == "First Name":
+            return [client for client in self.clients_list if search_text.lower() in client.first_name.lower()]
+        elif self.search_filter == "Last Name":
+            return [client for client in self.clients_list if search_text.lower() in client.last_name.lower()]
+        elif self.search_filter == "Phone Number":
+            return [client for client in self.clients_list if search_text in client.phone_number]
+        else:
+            return self.clients_list
