@@ -1,12 +1,12 @@
 import re
 
 
-def show_error_message(instance, message):
-    instance.ids.input_validation.text = f"[color=#ff0000]*[/color][i] {message}[/i]"
+def show_error_message(instance, reference_id, message):
+    instance.ids[reference_id].text = f"[color=#ff0000]*[/color][i] {message}[/i]"
 
 
-def show_info_message(instance, message):
-    instance.ids.input_validation.text = f"[color=#00ff00]*[/color][i] {message}[/i]"
+def show_info_message(instance, reference_id, message):
+    instance.ids[reference_id].text = f"[color=#00ff00]*[/color][i] {message}[/i]"
 
 
 def validate_client_registration(instance):
@@ -15,7 +15,7 @@ def validate_client_registration(instance):
     phone_number = instance.ids.client_phone_number.text
 
     if first_name == '' and last_name == '' and phone_number == '':
-        instance.ids.input_validation.text = \
+        instance.ids.client_input_validation.text = \
             "[color=#ff0000]*[/color] [i]Please fill in the client's required information.[/i]"
         return False
 
@@ -26,22 +26,22 @@ def validate_client_registration(instance):
 def validate_name(instance, widget):
     if widget.text == "":
         print("client name must not be empty")
-        instance.ids.input_validation.text = \
+        instance.ids.client_input_validation.text = \
             "[color=#ff0000]*[/color] [i]Client name must not be empty.[/i]"
 
 
 def validate_email(instance, widget):
     if not widget.focus and widget.text != "":
         if not instance.verify_email(widget):
-            instance.ids.input_validation.text = \
+            instance.ids.client_input_validation.text = \
                 "[color=#ff0000]*[/color] [i]Email format is not correct.[/i]"
     else:
-        instance.ids.input_validation.text = ""
+        instance.ids.client_input_validation.text = ""
 
 
-def validate_phone_number(instance, widget):
+def validate_phone_number(instance, reference_id, widget):
     if widget.text == "":
-        instance.ids.input_validation.text = \
+        instance.ids[reference_id].text = \
             "[color=#ff0000]*[/color] [i]Client phone number must not be empty.[/i]"
 
     if len(widget.text) != 8:

@@ -123,6 +123,7 @@
                 line_color: "grey"
                 color: "black"
                 shorten: True
+                disabled: True
 
             MDRaisedButton:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -150,6 +151,7 @@
                 line_color: "grey"
                 color: "black"
                 shorten: True
+                disabled: True
 
             MDRaisedButton:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -163,6 +165,7 @@
                 line_color: "grey"
                 color: "black"
                 shorten: True
+                disabled: True
 
             MDBoxLayout:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -361,7 +364,7 @@
                     on_focus: root.validate_email(self)
 
                 MDLabel:
-                    id: input_validation
+                    id: client_input_validation
                     pos: (self.parent.x, self.parent.y + dp(56))
                     size_hint: (1, .1)
                     padding: dp(16)
@@ -521,6 +524,16 @@
                     size: (self.parent.width - dp(167), dp(32))
                     pos: (self.parent.x + dp(160), self.parent.y + self.parent.height - dp(390))
                     values: ['Critical', 'Major', 'Minor']
+
+                MDLabel:
+                    id: device_input_validation
+                    pos: (self.parent.x, self.parent.y + dp(56))
+                    size_hint: (1, .1)
+                    padding: dp(16)
+                    text: ""
+                    markup: True
+                    color: app.theme_cls.primary_dark
+                    font_style: 'Subtitle2'
 
                 MDRectangleFlatIconButton:
                     id: register_device_button
@@ -775,24 +788,25 @@
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Full Name:"
+                    bold: True
 
                 MDLabel:
                     id: client_full_name
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    #text: "John Wick"
                     text: root.client_full_name
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Phone Number"
+                    text: "Phone:"
+                    bold: True
 
                 MDLabel:
                     id: client_phone_number
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "58034395"
+                    text: root.client_phone_number
 
             MDLabel:
                 size_hint: (1, .1)
@@ -818,67 +832,73 @@
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Type:"
+                    bold: True
 
                 MDLabel:
                     id: device_type
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Mobile"
+                    text: root.device_type
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Brand:"
+                    bold: True
 
                 MDLabel:
                     id: device_brand
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Oppo"
+                    text: root.device_brand
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Model:"
+                    bold: True
 
                 MDLabel:
                     id: device_model
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Reno12"
+                    text: root.device_model
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Fault Type:"
+                    bold: True
 
                 MDLabel:
                     id: fault_type
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Hardware"
+                    text: root.fault_type
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Fault Code:"
+                    bold: True
 
                 MDLabel:
                     id: fault_code
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "HF03"
+                    text: root.fault_code
 
                 MDLabel:
                     size_hint: (.4, 1)
                     padding: [dp(10), dp(0)]
                     text: "Fault Level:"
+                    bold: True
 
                 MDLabel:
                     id: fault_level
                     size_hint: (.6, 1)
                     padding: [dp(10), dp(0)]
-                    text: "Major"
+                    text: root.fault_level
 
         MDBoxLayout:
             size_hint: (.5, 1)
@@ -900,10 +920,9 @@
                 spacing: dp(10)
 
                 MDLabel:
-                    id: report_date
                     size_hint: (1, .1)
                     padding: [dp(10), dp(0)]
-                    text: "06/06/2024"
+                    text: "Fill in the report details below:"
 
                 BorderTextInput:
                     id: report_details
@@ -913,7 +932,7 @@
                     valign: 'top'
 
                 MDRectangleFlatIconButton:
-                    id: register_device_button
+                    id: register_report_button
                     pos_hint: {'center_x': .875, 'center_y': .5}
                     size_hint: (0.25, 0.05)
                     md_bg_color: app.theme_cls.primary_dark
@@ -925,6 +944,7 @@
                     line_color: "darkgrey"
                     theme_icon_color: "Custom"
                     icon_color: "white"
+                    on_release: root.register_diagnostic_report()
 
 
 #### Client Item View Model ####

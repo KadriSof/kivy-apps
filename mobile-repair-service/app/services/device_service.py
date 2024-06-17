@@ -1,10 +1,12 @@
 import logging
 
+from pymysql import IntegrityError
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.entities.device import Device as DeviceEntity
 from app.models.device import Device as DeviceModel
 from app.repositories.device_repository import DeviceRepository
+from app.utils.response import ServiceResponse
 from app.utils.session_manager import managed_session
 from app.utils.exceptions import DatabaseError, ServiceError, NotFoundError
 
@@ -41,18 +43,21 @@ class DeviceService:
         )
 
     @managed_session
-    def register_device(self, device_entity: DeviceEntity, session=None):
+    def register_device(self, device_entity: DeviceEntity, session=None) -> ServiceResponse:
         device_model = self._convert_to_model(device_entity)
 
         try:
             self.device_repository.add(device_model, session=session)
             device_entity.device_id = device_model.id
             logging.info(f"Device Service: Registered device: {device_model}")
-            return device_entity
+            return ServiceResponse(success=True, message="Device registered successfully!", data=device_entity)
 
         except SQLAlchemyError as e:
-            raise DatabaseError("Failed to register device", original_exception=e)
+            session.rollback()
+            raise DatabaseError("Failed to register device due to database error.", original_exception=e)
         except Exception as e:
+            session.rollback()
+            ServiceResponse(success=False, message="An unexpected error occurred in the service layer.")
             raise ServiceError("An unexpected error occurred in the service layer", details=str(e))
 
     @managed_session
@@ -83,7 +88,7 @@ class DeviceService:
 
     @managed_session
     def update_device_status(self, device_id, new_status, session=None):
-        device_model = self.device_repository.update_field(device_id, new_status, session=session)
+        device_model = self.device_repository.update_field(device_id, "status", new_status, session=session)
 
         if not device_model:
             raise NotFoundError(entity_name="Device", entity_id=device_id)
@@ -95,7 +100,7 @@ class DeviceService:
 
     @managed_session
     def update_device_delivered_at(self, device_id, delivered_at, session=None):
-        device_model = self.device_repository.update_field(device_id, delivered_at, session=session)
+        device_model = self.device_repository.update_field(device_id, "delivered_at", delivered_at, session=session)
 
         if not device_model:
             raise NotFoundError(entity_name="Device", entity_id=device_id)

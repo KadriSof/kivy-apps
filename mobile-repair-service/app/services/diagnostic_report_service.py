@@ -15,11 +15,10 @@ class DiagnosticReportService:
     @staticmethod
     def _convert_to_entity(report: DiagnosticReportModel):
         return DiagnosticReportEntity(
-            report_id=report.id,
-            device_id=report.device_id,
-            report_date=report.report_date,
             report_details=report.report_details,
-            resolved=report.resolved
+            resolved=report.resolved,
+            report_id=report.id,
+            device_id=report.device_id
         )
 
     @staticmethod
@@ -45,8 +44,9 @@ class DiagnosticReportService:
         except SQLAlchemyError as e:
             session.rollback()
             raise DatabaseError("Failed to register report", original_exception=e)
-
         except Exception as e:
+            session.rollback()
+            ServiceResponse(success=False, message="An unexpected error occurred in the service layer.")
             raise ServiceError("An unexpected error occurred in the service layer", details=str(e))
 
     @managed_session
@@ -65,11 +65,14 @@ class DiagnosticReportService:
 
     @managed_session
     def update_report(self, report_entity: DiagnosticReportEntity, session=None):
-        report_model = self.diagnostic_report_repository.get_by_id(report_entity.report_id, session=session)
+        report_models = self.diagnostic_report_repository.get_by_device_id(report_entity.device_id, session=session)
 
-        if not report_model:
+        if not report_models:
             raise NotFoundError(entity_name="DiagnosticReport", entity_id=report_entity.report_id)
 
+        # TODO: We have an issue here that we need to resolve.
+        report_model = report_models[0]
+        print(report_model)
         report_model.report_details = report_entity.report_details
         report_model.resolved = report_entity.resolved
 
@@ -83,4 +86,5 @@ class DiagnosticReportService:
             raise DatabaseError("Failed to update report", original_exception=e)
 
         except Exception as e:
+            session.rollback()
             raise ServiceError("An unexpected error occurred in the service layer", details=str(e))

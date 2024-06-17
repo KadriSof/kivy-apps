@@ -1,6 +1,6 @@
 """Client business logic."""
 import logging
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from pymysql.err import IntegrityError as PyMySQLError
 from app.utils.exceptions import DatabaseError, ServiceError, NotFoundError, DuplicateEntryError
 
@@ -50,9 +50,13 @@ class ClientService:
                 return ServiceResponse(success=False, message="The entered phone number is already registered.")
             return ServiceResponse(success=False, message="Failed to register client due to database error.")
 
+        except SQLAlchemyError as e:
+            session.rollback()
+            raise DatabaseError("Failed to register client due to database error.", original_exception=e)
         except Exception as e:
             session.rollback()
             ServiceResponse(success=False, message="An unexpected error occurred in the service layer.")
+            raise ServiceError("An unexpected error occurred in the service layer.", details=str(e))
 
     @managed_session
     def get_client(self, client_id, session=None):

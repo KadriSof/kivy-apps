@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from kivy.properties import StringProperty, NumericProperty
 from kivy.uix.popup import Popup
@@ -7,8 +8,10 @@ from kivymd.uix.boxlayout import MDBoxLayout
 
 from app.services.device_service import DeviceService
 from app.services.client_service import ClientService
+from app.services.diagnostic_report_service import DiagnosticReportService
 from app.entities.client import Client as ClientEntity
 from app.entities.device import Device as DeviceEntity
+from app.entities.diagnostic_report import DiagnosticReport as DiagnosticReportEntity
 import app.utils.ui_utils as ui_utilities
 
 
@@ -18,6 +21,7 @@ class HomeScreen(Screen):
     search_device_popup = None
     device_info_popup = None
     current_client_id = None
+    current_device_id = None
 
     def on_enter(self, *args):
         self.search_client_popup = SearchClientPopup()
@@ -65,13 +69,13 @@ class HomeScreen(Screen):
         if not ui_utilities.validate_client_registration(self):
             return
 
-        client_first_name = self.ids.client_first_name.text
-        client_last_name = self.ids.client_last_name.text
-        client_phone_number = self.ids.client_phone_number.text
-        client_email = self.ids.client_email.text
-
-        client = ClientEntity(client_first_name, client_last_name, client_phone_number, client_email)
         client_service = ClientService()
+        client = ClientEntity()
+
+        client.first_name = self.ids.client_first_name.text
+        client.last_name = self.ids.client_last_name.text
+        client.phone_number = self.ids.client_phone_number.text
+        client.email = self.ids.client_email.text
 
         response = client_service.register_client(client)
 
@@ -80,11 +84,11 @@ class HomeScreen(Screen):
             self.current_client_id = client.client_id
             self.ids.register_device_button.disabled = False
             logging.info("HomeScreen: Registered client successfully.")
-            ui_utilities.show_info_message(self, response.message)
+            ui_utilities.show_info_message(self, "client_input_validation", response.message)
 
         else:
             logging.exception(f"HomeScreen: Failed to register client: {client}.")
-            ui_utilities.show_error_message(self, response.message)
+            ui_utilities.show_error_message(self, "client_input_validation", response.message)
 
     def register_device(self):
         device_service = DeviceService()
@@ -98,13 +102,18 @@ class HomeScreen(Screen):
         device.fault_level = self.ids.fault_level.text
         device.client_id = self.current_client_id
 
-        try:
-            device = device_service.register_device(device)
-            self.add_device_to_pending_list(device)
-            logging.info(f"HomeScreen: Registered device successfully.")
+        response = device_service.register_device(device)
 
-        except Exception as e:
-            logging.exception(f"HomeScreen: Failed to register device: {device}.\n Exception: {e}")
+        if response.success:
+            device = response.data
+            self.current_device_id = device.device_id
+            self.add_device_to_pending_list(device)
+            logging.info("HomeScreen: Registered device successfully.")
+            ui_utilities.show_info_message(self, "device_input_validation", response.message)
+
+        else:
+            logging.exception(f"HomeScreen: Failed to register device: {device}.")
+            ui_utilities.show_error_message(self, "device_input_validation", response.message)
 
     def add_device_to_pending_list(self, device):
         device_status_item = DeviceStatusItemViewModel.from_entity(device)
@@ -158,6 +167,7 @@ class DeviceStatusItemViewModel(MDBoxLayout):
     device_id = NumericProperty()
     device_brand = StringProperty()
     device_status = StringProperty()
+    client_id = NumericProperty()
     device_entity = None
     client_entity = None
     device_info_popup = None
@@ -169,13 +179,13 @@ class DeviceStatusItemViewModel(MDBoxLayout):
 
     def get_client_entity(self):
         client_service = ClientService()
-        self.client_entity = client_service.get_client(self.device_id)
-        print(self.client_entity)
+        self.client_entity = client_service.get_client(self.client_id)
 
     # Factory method:
     @classmethod
     def from_entity(cls, device_entity: DeviceEntity):
         obj = cls(
+            client_id=device_entity.client_id if device_entity.client_id else 0,
             device_id=device_entity.device_id,
             device_brand=device_entity.device_brand,
             device_status=device_entity.device_status,
@@ -184,7 +194,6 @@ class DeviceStatusItemViewModel(MDBoxLayout):
         return obj
 
     def open_device_info_popup(self):
-        self.device_info_popup.client_full_name = "Baki Hanma"
         self.device_info_popup.device_entity = self.device_entity
         self.device_info_popup.client_entity = self.client_entity
         self.device_info_popup.open()
@@ -208,6 +217,7 @@ class ClientItemViewModel(MDBoxLayout):
         self.client_phone_number = client_phone_number
 
 
+# TODO: See if we can add an 'Assembler' that will transfer the data between components.
 class DeviceInformationPopup(Popup):
     client_full_name = StringProperty()
     client_phone_number = StringProperty()
@@ -218,15 +228,71 @@ class DeviceInformationPopup(Popup):
     fault_code = StringProperty()
     fault_type = StringProperty()
     fault_level = StringProperty()
+    # TODO: Add the attributes related to the diagnostic report UI input.
     device_entity = None
     client_entity = None
+    reprot_entity = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
 
     def on_open(self):
-        print(self.device_entity)
-        print(self.client_entity)
+        self.extract_device_info()
+        self.extract_client_info()
+        self.extract_report_info()
+        self.disable_report_textinput()
+
+    def extract_device_info(self):
+        self.device_id = str(self.device_entity.device_id)
+        self.device_type = self.device_entity.device_type
+        self.device_brand = self.device_entity.device_brand
+        self.device_model = self.device_entity.device_model
+        self.fault_type = self.device_entity.fault_type
+        self.fault_level = self.device_entity.fault_level
+        self.fault_code = self.device_entity.fault_code
+
+    def extract_client_info(self):
+        self.client_full_name = f"{self.client_entity.first_name} {self.client_entity.last_name}"
+        self.client_phone_number = self.client_entity.phone_number
+
+    def extract_report_info(self):
+        # TODO: Call the diagnostic report service to extract the corresponding diagnostic report.
+        diagnostic_report_service = DiagnosticReportService()
+        report = diagnostic_report_service.get_reports_by_device(self.device_entity.device_id)[0]
+        self.ids.report_details.text = report.report_details
+        print(report.report_details)
+
+    def disable_report_textinput(self):
+        if self.device_entity.device_status == "Repaired":
+            self.ids.report_details.disabled = True
+        else:
+            self.ids.report_details.focus = True
+
+    def register_diagnostic_report(self):
+        diagnostic_report_service = DiagnosticReportService()
+
+        report = DiagnosticReportEntity()
+        report.report_details = self.ids.report_details.text
+        report.report_date = datetime.now()
+        report.device_id = self.device_entity.device_id
+        report.resolved = True
+
+        existing_report = diagnostic_report_service.get_reports_by_device(self.device_entity.device_id)
+
+        if existing_report:
+            print("this report exists already.")
+            diagnostic_report_service.update_report(report)
+            return
+
+        response = diagnostic_report_service.register_report(report)
+
+        if response.success:
+            logging.info("HomeScreen: Registered report successfully.")
+            self.ids.register_report_button.disabled = True
+            self.ids.report_details.disabled = True
+
+        else:
+            logging.exception(f"HomeScreen: Failed to register report: {report}.")
 
 
 class DeviceIemViewModel(MDBoxLayout):

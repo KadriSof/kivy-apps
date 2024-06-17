@@ -5,8 +5,8 @@ from typing import Optional
 
 @dataclass
 class DiagnosticReport:
-    device_id: int
-    report_date: datetime
-    report_details: str
+    report_date: datetime = field(default=None, init=False)
+    report_details: str = ''
     resolved: bool = False
     report_id: Optional[int] = field(default=None)
+    device_id: Optional[int] = field(default=None)
